@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Narrative Feature Segment Search</title>
+<style>
+  :root { --bd:#d9dee3; --mut:#667; --accent:#2563eb; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif; color:#222; background:#f6f7f9; }
+  header { padding:12px 18px; background:#fff; border-bottom:1px solid var(--bd); }
+  header h1 { font-size:17px; margin:0; }
+  header p { margin:3px 0 0; color:var(--mut); font-size:12px; }
+  .wrap { display:flex; gap:14px; padding:14px; align-items:flex-start; }
+  .panel { background:#fff; border:1px solid var(--bd); border-radius:8px; }
+  #controls { width:330px; flex:none; padding:12px; position:sticky; top:14px; max-height:90vh; overflow:auto; }
+  #results { flex:1; padding:0; }
+  .cls { font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--mut); margin:10px 0 3px; }
+  .ch { display:flex; align-items:center; gap:6px; padding:2px 0; }
+  .ch label { flex:1; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ch .dir { font-size:11px; border:1px solid var(--bd); border-radius:4px; padding:1px 6px; cursor:pointer; background:#f1f3f5; user-select:none; }
+  .ch .dir.low { color:#b4500a; } .ch .dir.high { color:#0a6b2e; }
+  input[type=search], select { width:100%; padding:6px; border:1px solid var(--bd); border-radius:6px; margin:4px 0; }
+  .row2 { display:flex; gap:8px; } .row2 > * { flex:1; }
+  .seg { display:flex; gap:10px; align-items:center; padding:9px 12px; border-bottom:1px solid #eef0f2; }
+  .seg:hover { background:#fafbfc; }
+  .rank { width:26px; color:var(--mut); font-variant-numeric:tabular-nums; }
+  .seg .meta { flex:1; min-width:0; }
+  .seg .sid { font-weight:600; }
+  .seg .time { color:var(--mut); font-size:12px; }
+  .chips { margin-top:3px; }
+  .chip { display:inline-block; font-size:11px; background:#eef2ff; color:#3340a0; border-radius:4px; padding:1px 6px; margin:1px 3px 1px 0; }
+  .score { font-variant-numeric:tabular-nums; color:#111; font-weight:600; width:54px; text-align:right; }
+  button.play { border:1px solid var(--accent); color:var(--accent); background:#fff; border-radius:6px; padding:4px 9px; cursor:pointer; }
+  button.play:disabled { opacity:.4; cursor:default; }
+  #player { position:sticky; top:14px; padding:10px; }
+  #player video { width:100%; border-radius:6px; background:#000; }
+  #player .now { font-size:12px; color:var(--mut); margin-top:4px; }
+  .muted { color:var(--mut); font-size:12px; padding:14px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Narrative Feature Segment Search</h1>
+  <p>Rank movie/story segments by any combination of computational annotations. Pick features
+     (toggle <b>High</b>/<b>Low</b>), then play the matching moment.</p>
+</header>
+
+<div class="wrap">
+  <div id="controls" class="panel">
+    <input type="search" id="chfilter" placeholder="filter features…">
+    <div class="row2">
+      <select id="src"><option value="">all sources</option></select>
+      <select id="topn">
+        <option>25</option><option selected>50</option><option>100</option><option>200</option>
+      </select>
+    </div>
+    <div id="chlist"></div>
+  </div>
+
+  <div id="results" class="panel"><div class="muted">Loading index…</div></div>
+
+  <div style="width:320px;flex:none;">
+    <div id="player" class="panel">
+      <video id="vid" controls></video>
+      <div class="now" id="now">Select a segment to play.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let DATA = null, SEL = new Map();   // name -> +1 (high) / -1 (low)
+
+fetch("./segments.json").then(r => r.json()).then(d => {
+  DATA = d;
+  DATA.cidx = Object.fromEntries(d.channels.map((c,i) => [c.name, i]));
+  buildSources(); buildChannels(); search();
+});
+
+function shortName(n){ const p = n.split("/"); return p.slice(-2).join("/"); }
+
+function buildSources(){
+  const s = new Set(DATA.segments.map(x => x.src).filter(Boolean));
+  const sel = document.getElementById("src");
+  [...s].sort().forEach(v => { const o=document.createElement("option"); o.value=o.textContent=v; sel.appendChild(o); });
+  sel.onchange = search;
+  document.getElementById("topn").onchange = search;
+}
+
+function buildChannels(){
+  const host = document.getElementById("chlist");
+  const byClass = {};
+  DATA.channels.forEach(c => (byClass[c.class] ??= []).push(c));
+  host.innerHTML = "";
+  Object.keys(byClass).sort().forEach(cls => {
+    const h = document.createElement("div"); h.className="cls"; h.textContent=cls; host.appendChild(h);
+    byClass[cls].forEach(c => {
+      const row = document.createElement("div"); row.className="ch"; row.dataset.name=c.name;
+      const cb = document.createElement("input"); cb.type="checkbox";
+      const lab = document.createElement("label"); lab.textContent = shortName(c.name); lab.title=c.name;
+      const dir = document.createElement("span"); dir.className="dir high"; dir.textContent="High";
+      cb.onchange = () => {  // respect the currently-displayed High/Low direction
+        if(cb.checked) SEL.set(c.name, dir.classList.contains("high") ? 1 : -1);
+        else SEL.delete(c.name);
+        search();
+      };
+      dir.onclick = () => {
+        const hi = dir.classList.contains("high");
+        dir.classList.toggle("high",!hi); dir.classList.toggle("low",hi);
+        dir.textContent = hi ? "Low" : "High";
+        if(cb.checked){ SEL.set(c.name, hi ? -1 : 1); search(); }
+      };
+      lab.onclick = () => { cb.checked=!cb.checked; cb.onchange(); };
+      row.append(cb,lab,dir); host.appendChild(row);
+    });
+  });
+  document.getElementById("chfilter").oninput = e => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll("#chlist .ch").forEach(r =>
+      r.style.display = r.dataset.name.toLowerCase().includes(q) ? "" : "none");
+  };
+}
+
+function score(seg){
+  let sum=0, k=0;
+  for(const [name,dir] of SEL){
+    const i = DATA.cidx[name], v = seg.v[i];
+    if(v==null) continue;
+    const c = DATA.channels[i];
+    if(!(c.std > 0)) continue;              // guard: never divide by zero std
+    sum += dir * (v - c.mean)/c.std; k++;
+  }
+  return {score: k ? sum/k : -Infinity, k};
+}
+
+function search(){
+  const srcF = document.getElementById("src").value;
+  const topN = +document.getElementById("topn").value;
+  const out = document.getElementById("results");
+  if(SEL.size===0){ out.innerHTML = '<div class="muted">Pick one or more features on the left to rank segments.</div>'; return; }
+  let segs = DATA.segments.filter(s => !srcF || s.src===srcF);
+  segs = segs.map(s => ({s, ...score(s)})).filter(x => isFinite(x.score))
+             .sort((a,b) => b.score-a.score).slice(0, topN);
+  out.innerHTML = "";
+  segs.forEach((x,n) => {
+    const s = x.s;
+    const row = document.createElement("div"); row.className="seg";
+    row.innerHTML =
+      `<div class="rank">${n+1}</div>
+       <div class="meta"><span class="sid"></span>
+         <span class="time"></span>
+         <div class="chips"></div></div>
+       <div class="score">${x.score.toFixed(2)}</div>`;
+    // ids/sources come from filenames — set via textContent, never innerHTML
+    row.querySelector(".sid").textContent = s.stim;
+    const cov = x.k < SEL.size ? ` · ${x.k}/${SEL.size} features` : "";
+    row.querySelector(".time").textContent =
+      `  ${s.t0.toFixed(0)}–${s.t1.toFixed(0)}s · ${s.src}${cov}`;
+    const chipHost = row.querySelector(".chips");
+    for(const nm of SEL.keys()){
+      const v = s.v[DATA.cidx[nm]];
+      if(v==null) continue;
+      const chip = document.createElement("span"); chip.className="chip";
+      chip.textContent = `${shortName(nm)}: ${(+v).toPrecision(3)}`;
+      chipHost.appendChild(chip);
+    }
+    const btn = document.createElement("button"); btn.className="play";
+    const playable = s.media && s.modality !== "text-only";
+    btn.textContent = s.modality === "audio-only" ? "▶ ♪" : "▶ Play";
+    btn.title = s.modality === "audio-only" ? "audio-only stimulus" : "";
+    btn.disabled = !playable; btn.onclick = () => playSeg(s);
+    row.appendChild(btn); out.appendChild(row);
+  });
+  if(!segs.length) out.innerHTML = '<div class="muted">No matching segments.</div>';
+}
+
+function playSeg(s){
+  const v = document.getElementById("vid"), now = document.getElementById("now");
+  now.textContent = `${s.stim}  ${s.t0.toFixed(0)}–${s.t1.toFixed(0)}s` +
+                    (s.modality === "audio-only" ? "  (audio)" : "");
+  v.onerror = () => { now.textContent = `Cannot play ${s.stim} (unsupported media)`;
+                      delete v.dataset.media; };   // allow retry, don't dead-end
+  if(v.dataset.media !== s.media){ v.src = s.media; v.dataset.media = s.media; }
+  const start = () => { v.currentTime = s.t0; v.play(); };
+  if(v.readyState>=1) start(); else v.onloadedmetadata = start;
+  v.ontimeupdate = () => { if(v.currentTime >= s.t1) { v.pause(); v.ontimeupdate=null; } };
+}
+</script>
+</body>
+</html>

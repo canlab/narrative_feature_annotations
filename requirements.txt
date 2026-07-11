@@ -1,0 +1,45 @@
+# Narrative Feature Extraction — Phase 2 core CPU pipeline.
+# Install:  python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# Decoding uses PyAV's bundled ffmpeg + imageio-ffmpeg's static binary (no system ffmpeg).
+# NOTE: do NOT also install opencv-python — its bundled ffmpeg dylibs clash with PyAV.
+
+numpy>=2,<3
+scipy>=1.13
+h5py>=3.11
+scikit-image>=0.24
+librosa>=0.11
+soundfile>=0.12
+av>=12
+imageio-ffmpeg>=0.5
+
+# ASR + language passes
+faster-whisper>=1.1        # CTranslate2 backend (CPU on Apple Silicon; no Metal)
+spacy>=3.7                 # then: python -m spacy download en_core_web_sm  (trf for production)
+wordfreq>=3.1
+
+# MPS passes on Apple Silicon (vision + audio high-level + VLM reasoning)
+torch>=2.4
+torchvision>=0.19         # RAFT flow, Keypoint R-CNN pose
+transformers>=4.45        # SigLIP2, DINOv2, Depth-Anything, VideoMAE, AST, CLAP, Qwen2.5-VL
+pillow>=10
+accelerate>=0.30
+qwen-vl-utils>=0.0.8      # Qwen2.5-VL frame/message handling
+statesegmentation>=1.0    # GSBS event segmentation (post-pass)
+# GPT-2 (surprisal), RoBERTa-GoEmotions, CardiffNLP sentiment, AST, CLAP, etc. all load
+# via transformers above. scipy.ndimage (spectral-residual saliency) comes with scipy.
+# facenet-pytorch (MTCNN faces) — install WITHOUT deps so it can't downgrade torch:
+#   .venv/bin/pip install --no-deps facenet-pytorch
+
+# Affect additions (emotion/sentiment):
+#   EmoNet (Kragel 2019, 20-way image emotion): pure torch/torchvision — no extra dep;
+#     the AlexNet class is vendored in extractors/visual_emonet.py, weights fetched from OSF.
+hsemotion>=0.3            # facial affect (HSEmotion EfficientNet, AffectNet 8 + valence/arousal)
+#   install WITHOUT deps so it can't pull opencv:  .venv/bin/pip install --no-deps hsemotion
+timm==0.9.16             # REQUIRED by hsemotion's pickled EfficientNets (timm 1.0 breaks them)
+
+# Added per frozen core set as remaining passes land (Phase 2, not yet wired):
+#   whisperx (forced alignment) + pyannote.audio (diarization, needs HF token+terms)
+#   minicons (LLM surprisal); ViNet (saliency)
+#   insightface + onnxruntime (full faces — isolate; pulls in OpenCV, clashes with PyAV)
+#   mmpose/rtmpose (133-kpt whole-body)
+#   openai (hosted: text-embedding-3-large, GPT-5.x — opt-in)

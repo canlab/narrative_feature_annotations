@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://narrative-feature-extraction/schema/annotation.schema.json",
+  "title": "Narrative Annotation File (v0.1 pure-JSON profile)",
+  "description": "Machine-checkable encoding of the PURE-JSON profile for one stimulus (small/demo files and tests). The AUTHORITATIVE format spec is docs/design/ANNOTATION_FORMAT.md (v0.2), which makes HDF5 the canonical container for production with this JSON as a readable sidecar manifest; dense channels are then offloaded to a sibling .h5 referenced by 'data_ref'. Inapplicable features use null/NaN. This schema validates the inline-value JSON layout that matlab/readAnnotations.m reads today.",
+  "type": "object",
+  "required": ["schema_version", "stimulus", "timeline", "features"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "stimulus": {
+      "type": "object",
+      "required": ["id", "modality", "duration_sec"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "modality": { "type": "string", "enum": ["audiovisual", "video-only", "audio-only", "text-only"] },
+        "duration_sec": { "type": "number" },
+        "source": { "type": "string" },
+        "media_file": { "type": "string" }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["rate_hz", "t_start_sec", "n_samples"],
+      "description": "Common time grid all features are resampled onto. time_sec[i] = t_start_sec + i / rate_hz.",
+      "properties": {
+        "rate_hz": { "type": "number" },
+        "t_start_sec": { "type": "number" },
+        "n_samples": { "type": "integer" },
+        "time_sec": { "type": "array", "items": { "type": "number" }, "description": "Optional explicit timestamps; derivable from rate if omitted." }
+      }
+    },
+    "features": {
+      "type": "object",
+      "description": "Top-level feature classes mirroring docs/scoping_review hierarchy.",
+      "additionalProperties": {
+        "$ref": "#/definitions/featureGroup"
+      }
+    },
+    "human_annotations": {
+      "type": "object",
+      "description": "Reserved for later human annotations. Same hierarchical shape as 'features'; empty in machine-generated files."
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "pipeline_version": { "type": "string" },
+        "generated_utc": { "type": "string" },
+        "models": { "type": "object" }
+      }
+    }
+  },
+  "definitions": {
+    "featureGroup": {
+      "description": "A node in the hierarchy: either further subgroups or leaf feature channels.",
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "$ref": "#/definitions/featureGroup" },
+          { "$ref": "#/definitions/featureChannel" }
+        ]
+      }
+    },
+    "featureChannel": {
+      "type": "object",
+      "required": ["value", "applicable"],
+      "properties": {
+        "value": {
+          "description": "Length-n_samples array. Scalars: number|null. Vectors/categoricals: array per timepoint or label string. null === NaN === not measured at that timepoint.",
+          "type": "array"
+        },
+        "data_ref": { "type": "string", "description": "Optional path into a sibling binary file when 'value' is offloaded." },
+        "dtype": { "type": "string", "enum": ["scalar", "vector", "categorical", "label", "bool", "event", "text"] },
+        "categories": { "type": "array", "items": { "type": "string" }, "description": "Label vocabulary for categorical channels (index = code)." },
+        "components": { "type": "array", "items": { "type": "string" }, "description": "Column names for vector channels." },
+        "units": { "type": "string" },
+        "applicable": { "type": "boolean", "description": "false when this feature does not apply to the stimulus modality; value is all-null." },
+        "model": { "type": "string" },
+        "version": { "type": "string" },
+        "native_rate_hz": { "type": ["number", "string"] },
+        "resample": { "type": "string", "description": "How native-rate samples were mapped to the grid (mean|max|nearest|sum|mode|...)." },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

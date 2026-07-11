@@ -1,0 +1,69 @@
+{
+  "schema_version": "0.1",
+  "stimulus": {
+    "id": "demo_movie_001",
+    "title": "Demo clip",
+    "modality": "audiovisual",
+    "duration_sec": 3.0,
+    "source": "user-supplied",
+    "media_file": "data/movies/demo_movie_001.mp4"
+  },
+  "timeline": {
+    "rate_hz": 1.0,
+    "t_start_sec": 0.0,
+    "n_samples": 3,
+    "time_sec": [0.0, 1.0, 2.0]
+  },
+  "features": {
+    "visual": {
+      "low_level_static": {
+        "luminance": {
+          "value": [0.41, 0.43, 0.38],
+          "dtype": "scalar", "units": "0-1", "applicable": true,
+          "model": "scikit-image", "version": "0.x", "native_rate_hz": 25, "resample": "mean"
+        }
+      },
+      "high_level_static": {
+        "scene_category": {
+          "value": ["kitchen", "kitchen", "hallway"],
+          "dtype": "label", "applicable": true,
+          "model": "Places365-CLIP", "version": "TBD", "native_rate_hz": 1, "resample": "mode"
+        }
+      }
+    },
+    "audio": {
+      "low_level": {
+        "loudness": {
+          "value": [0.62, 0.71, 0.55],
+          "dtype": "scalar", "units": "LUFS-rel", "applicable": true,
+          "model": "librosa", "version": "0.x", "native_rate_hz": 100, "resample": "mean"
+        }
+      }
+    },
+    "language": {
+      "lexical": {
+        "valence_norm": {
+          "value": [null, 6.2, 5.8],
+          "dtype": "scalar", "units": "1-9 (Warriner)", "applicable": true,
+          "model": "Warriner-norms", "version": "2013", "native_rate_hz": "word", "resample": "mean",
+          "notes": "null at t=0: no speech present in that window"
+        }
+      }
+    },
+    "affect": {
+      "dimensional": {
+        "valence": {
+          "value": [0.1, 0.3, -0.2],
+          "dtype": "scalar", "units": "-1..1", "applicable": true,
+          "model": "multimodal-fusion-TBD", "version": "TBD", "native_rate_hz": 1, "resample": "mean"
+        }
+      }
+    }
+  },
+  "human_annotations": {},
+  "provenance": {
+    "pipeline_version": "0.1-scaffold",
+    "generated_utc": "TBD",
+    "models": {}
+  }
+}

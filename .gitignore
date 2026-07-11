@@ -1,0 +1,40 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# mdBook documentation site — both are generated:
+#   book/src   by tools/build_book.py (mirror of docs/)
+#   book/book  by `mdbook build`
+/book/src/
+/book/book/
+
+# run logs
+/logs/
+
+# Annotation derivatives — kept in Dropbox only, excluded from git by choice.
+# The docs site does NOT need them (it uses analysis/figures + analysis/web).
+# Regenerate from the media with the pipeline; or host the dataset on OSF/Zenodo.
+/annotations/
+
+# --------------------------------------------------------------------------
+# Stimulus MEDIA — never commit to GitHub. Two reasons:
+#   (1) size: many files exceed GitHub's 100 MB hard per-file limit (~11 GB total);
+#   (2) copyright: spacetop clips, Narratives audio, and Kung Fury are others' IP.
+# These live in Dropbox; git tracks only the metadata (manifest.csv, SOURCES.md,
+# lexicon CSVs, the small text story). The docs site never needs the media.
+data/**/*.mp4
+data/**/*.mkv
+data/**/*.mov
+data/**/*.m4v
+data/**/*.avi
+data/**/*.webm
+data/**/*.wav
+data/**/*.mp3
+data/**/*.m4a
+data/**/*.aac
+data/**/*.flac
+data/**/*.ogg
