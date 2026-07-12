@@ -181,8 +181,9 @@ beach-sunset clips.
 > **Playback & media.** The ranking interface works anywhere. Actually *playing* a clip
 > needs the source media served from the same origin — so playback works when you serve
 > the project locally, but not on the public GitHub Pages site, where the licensed media
-> are not hosted. To use it fully, serve the repository root
-> (`python3 -m http.server 8000`) and open `analysis/web/index.html`.
+> are not hosted. To use it fully, serve the repository root with `python3 tools/serve.py`
+> (a small Range-capable server, so video **seeking** works — the built-in
+> `python -m http.server` cannot seek) and open `analysis/web/index.html`.
 {extra}""")
 
 

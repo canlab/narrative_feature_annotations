@@ -334,13 +334,27 @@ function drawTimeline(stim){
   svg += `</svg>`;
 
   host.innerHTML = `<div class="lg">${lg}</div>${svg}
-     <div class="cap">Feature values (z-scored across the corpus) over the full clip; the marker tracks playback.</div>`;
+     <div class="cap">Feature values (z-scored across the corpus) over the full clip; the marker tracks playback. <b>Click the plot to jump the video to that time.</b></div>`;
 
   TL = { stim, tMax, series, X, Y,
          svg: host.querySelector("svg"),
          ph: host.querySelector("#tlph"),
          dots: [...host.querySelectorAll("[data-dot]")],
          lgVals: Object.fromEntries(series.map(s => [s.name, host.querySelector(`[data-lg="${CSS.escape(s.name)}"]`)])) };
+
+  // click anywhere on the plot -> seek the video to that time point
+  TL.svg.style.cursor = "crosshair";
+  TL.svg.onclick = (e) => {
+    const rect = TL.svg.getBoundingClientRect();
+    if(rect.width <= 0) return;
+    const frac = (e.clientX - rect.left) / rect.width;          // 0..1 across the viewBox
+    let t = ((frac * W - pL) / (W - pL - pR)) * TL.tMax;
+    t = Math.max(0, Math.min(t, Math.max(0, TL.tMax - 0.05)));
+    const v = vid();
+    curRange = { from:t, to:Infinity };                          // free navigation from here
+    const seek = () => { try { v.currentTime = t; } catch(_){} updateDot(); };
+    if(v.readyState >= 1) seek(); else v.addEventListener("loadedmetadata", seek, { once:true });
+  };
   updateDot();
 }
 

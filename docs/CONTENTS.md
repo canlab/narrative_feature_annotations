@@ -130,7 +130,7 @@ Browser tool to rank segments by any combination of features and play the matchi
 moment. Serve from the project root, then open the page:
 
 ```bash
-python3 -m http.server 8000      # from the project root
+python3 tools/serve.py           # from the project root (Range-enabled, so video seeking works)
 # open http://localhost:8000/analysis/web/index.html
 ```
 
@@ -177,7 +177,7 @@ sel = selectStimulusSet(C, "K", 20);      % design a stimulus set; sel.table
 
 ```bash
 # 4) SEARCH segments by feature in the browser (serve from project root)
-python3 -m http.server 8000      # then open http://localhost:8000/analysis/web/index.html
+python3 tools/serve.py           # then open http://localhost:8000/analysis/web/index.html
 ```
 
 See [`walkthrough.m`](walkthrough.m) for the same steps, runnable section by section.

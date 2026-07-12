@@ -76,7 +76,8 @@ expressions are individually searchable). Pick any combination of features,
 toggle High/Low, and segments are ranked by mean z-score (with a features-covered count when
 a segment lacks some selected channels); **▶ Play** seeks the actual clip to that segment
 (audio stories play as sound; text-only has no playback). Serve from the project root
-(`python3 -m http.server 8000` → `analysis/web/index.html`). Rankings validate well —
+(`python3 tools/serve.py` → `analysis/web/index.html`; the bundled server adds HTTP
+Range support so video seeking works). Rankings validate well —
 high flow surfaces action scenes, high word-rate the dialogue clips, EmoNet "Aesthetic
 Appreciation" the beach-sunset clips, etc. Launch +
 rebuild notes: [`../../analysis/web/README.md`](../../analysis/web/README.md).

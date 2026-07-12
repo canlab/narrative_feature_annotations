@@ -84,6 +84,6 @@ disp(sel.table)                          % rank, stimulus, t_start, t_end, dur_s
 %     PYTHONPATH=src .venv/bin/python -m nfe.run <movie> --vision --audio-hl --events \
 %         --template schema/channel_template.json
 % - SEARCH segments by feature in a browser (serve from the project root):
-%     python3 -m http.server 8000   % then open http://localhost:8000/analysis/web/index.html
+%     python3 tools/serve.py   % Range-enabled (video seeking works); open http://localhost:8000/analysis/web/index.html
 % - Full reference: docs/CONTENTS.md ; format: docs/design/ANNOTATION_FORMAT.md
 disp("Walkthrough complete. See docs/CONTENTS.md for the full guide.");
