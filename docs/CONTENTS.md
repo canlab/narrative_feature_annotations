@@ -186,6 +186,8 @@ See [`walkthrough.m`](walkthrough.m) for the same steps, runnable section by sec
 
 ## Documentation index
 
+- **Feature map (all 95 channels):** [`FEATURE_MAP.md`](FEATURE_MAP.md) — a graphical map of
+  the feature hierarchy; editable SVG at `analysis/figures/feature_map.svg`
 - **Adding movies/stories:** [`ADDING_MOVIES.md`](ADDING_MOVIES.md) — how to grow the
   corpus and refresh all derivatives + corpus-specific doc numbers
 - **External stimuli (HCP, CamCAN):** [`EXTERNAL_STIMULI.md`](EXTERNAL_STIMULI.md) — how to

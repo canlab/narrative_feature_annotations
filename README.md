@@ -7,6 +7,14 @@ paper with figures, and the interactive segment browser — is published as a bo
 **[canlab.github.io/narrative_feature_annotations](https://canlab.github.io/narrative_feature_annotations/)**.
 It is the recommended entry point. (Build/deploy notes: [`docs/DEPLOYING.md`](docs/DEPLOYING.md).)*
 
+### 🗺️ [**Feature map**](docs/FEATURE_MAP.md) — all 95 annotation channels at a glance
+
+[![Narrative Feature Annotation Map](analysis/figures/feature_map.svg)](docs/FEATURE_MAP.md)
+
+*A map of every feature and its hierarchical organization. The source is an editable
+[SVG](analysis/figures/feature_map.svg) (open/recolor in PowerPoint, Illustrator, or Inkscape);
+regenerate with `python3 tools/build_feature_map.py`.*
+
 ---
 
 Infrastructure for producing **second-by-second computational annotations of movies and audio stories** across the full range of stimulus, perceptual, linguistic, social, situational, and affective features — for use in cognitive science and naturalistic-neuroimaging research.

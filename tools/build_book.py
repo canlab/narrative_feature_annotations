@@ -37,6 +37,7 @@ TOC = [
     ("prefix", "Introduction", "introduction.md"),
     ("part", "Overview", None),
     (0, "Project overview", "project_overview.md"),
+    (0, "Feature map", "docs/FEATURE_MAP.md"),
     (0, "Contents & user guide", "docs/CONTENTS.md"),
     ("part", "Phase 1 — Scoping Review", None),
     (0, "Scoping review — index", "docs/scoping_review/scoping_index.md"),
