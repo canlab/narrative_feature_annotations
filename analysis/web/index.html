@@ -11,10 +11,11 @@
   header { padding:12px 18px; background:#fff; border-bottom:1px solid var(--bd); }
   header h1 { font-size:17px; margin:0; }
   header p { margin:3px 0 0; color:var(--mut); font-size:12px; }
-  .wrap { display:flex; gap:14px; padding:14px; align-items:flex-start; }
+  .wrap { display:flex; gap:12px; padding:12px; align-items:flex-start; }
   .panel { background:#fff; border:1px solid var(--bd); border-radius:8px; }
-  #controls { width:330px; flex:none; padding:12px; position:sticky; top:14px; max-height:90vh; overflow:auto; }
-  #results { flex:1; padding:0; }
+  #controls { width:280px; flex:none; padding:12px; position:sticky; top:12px; max-height:92vh; overflow:auto; }
+  #results { width:300px; flex:none; padding:0; position:sticky; top:12px; max-height:92vh; overflow:auto; }
+  #playercol { flex:1; min-width:0; position:sticky; top:12px; }
   .cls { font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--mut); margin:10px 0 3px; }
   .ch { display:flex; align-items:center; gap:6px; padding:2px 0; }
   .ch label { flex:1; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -22,20 +23,32 @@
   .ch .dir.low { color:#b4500a; } .ch .dir.high { color:#0a6b2e; }
   input[type=search], select { width:100%; padding:6px; border:1px solid var(--bd); border-radius:6px; margin:4px 0; }
   .row2 { display:flex; gap:8px; } .row2 > * { flex:1; }
-  .seg { display:flex; gap:10px; align-items:center; padding:9px 12px; border-bottom:1px solid #eef0f2; }
+  .seg { display:flex; flex-direction:column; gap:5px; padding:8px 10px; border-bottom:1px solid #eef0f2; font-size:13px; }
   .seg:hover { background:#fafbfc; }
-  .rank { width:26px; color:var(--mut); font-variant-numeric:tabular-nums; }
+  .seg.active { background:#eef4ff; }
+  .seg .top { display:flex; gap:8px; align-items:baseline; }
+  .rank { width:22px; color:var(--mut); font-variant-numeric:tabular-nums; flex:none; }
   .seg .meta { flex:1; min-width:0; }
-  .seg .sid { font-weight:600; }
+  .seg .sid { font-weight:600; word-break:break-all; }
   .seg .time { color:var(--mut); font-size:12px; }
-  .chips { margin-top:3px; }
+  .score { font-variant-numeric:tabular-nums; color:#111; font-weight:600; text-align:right; flex:none; }
+  .chips { margin:1px 0; }
   .chip { display:inline-block; font-size:11px; background:#eef2ff; color:#3340a0; border-radius:4px; padding:1px 6px; margin:1px 3px 1px 0; }
-  .score { font-variant-numeric:tabular-nums; color:#111; font-weight:600; width:54px; text-align:right; }
-  button.play { border:1px solid var(--accent); color:var(--accent); background:#fff; border-radius:6px; padding:4px 9px; cursor:pointer; }
+  .btns { display:flex; gap:6px; }
+  button.play { border:1px solid var(--accent); color:var(--accent); background:#fff; border-radius:6px; padding:3px 8px; cursor:pointer; font-size:12px; }
+  button.play:hover:not(:disabled) { background:#eff4ff; }
   button.play:disabled { opacity:.4; cursor:default; }
-  #player { position:sticky; top:14px; padding:10px; }
-  #player video { width:100%; border-radius:6px; background:#000; }
-  #player .now { font-size:12px; color:var(--mut); margin-top:4px; }
+  #player { padding:10px; }
+  #player video { width:100%; max-height:62vh; border-radius:6px; background:#000; display:block; }
+  #player .now { font-size:13px; color:#333; margin:6px 0; }
+  #player .pbtns { display:flex; gap:8px; margin-bottom:6px; }
+  #tl { margin-top:8px; }
+  #tl .lg { display:flex; flex-wrap:wrap; gap:10px; font-size:12px; margin-bottom:4px; }
+  #tl .lg span.k { display:inline-flex; align-items:center; gap:5px; }
+  #tl .lg i { width:11px; height:11px; border-radius:2px; display:inline-block; }
+  #tl .lg b { font-variant-numeric:tabular-nums; }
+  #tl svg { width:100%; height:190px; display:block; background:#fbfcfe; border:1px solid var(--bd); border-radius:6px; }
+  #tl .cap { font-size:11px; color:var(--mut); margin-top:3px; }
   .muted { color:var(--mut); font-size:12px; padding:14px; }
 </style>
 </head>
@@ -43,7 +56,7 @@
 <header>
   <h1>Narrative Feature Segment Search</h1>
   <p>Rank movie/story segments by any combination of computational annotations. Pick features
-     (toggle <b>High</b>/<b>Low</b>), then play the matching moment.</p>
+     (toggle <b>High</b>/<b>Low</b>), then play the matching moment and see the feature time series in context.</p>
 </header>
 
 <div class="wrap">
@@ -60,31 +73,40 @@
 
   <div id="results" class="panel"><div class="muted">Loading index…</div></div>
 
-  <div style="width:320px;flex:none;">
+  <div id="playercol">
     <div id="player" class="panel">
       <video id="vid" controls></video>
       <div class="now" id="now">Select a segment to play.</div>
+      <div class="pbtns">
+        <button class="play" id="playSeg" disabled>▶ Play segment</button>
+        <button class="play" id="playClip" disabled>▶ Play entire clip</button>
+      </div>
+      <div id="tl"></div>
     </div>
   </div>
 </div>
 
 <script>
-let DATA = null, SEL = new Map();   // name -> +1 (high) / -1 (low)
+let DATA = null, SEL = new Map();          // name -> +1 (high) / -1 (low)
+let lastSeg = null, curRange = null, TL = null, rafId = null;
+const PALETTE = ["#2563eb","#dc2626","#059669","#d97706","#7c3aed","#0891b2","#db2777","#65a30d"];
+const vid = () => document.getElementById("vid");
 
 fetch("./segments.json").then(r => r.json()).then(d => {
   DATA = d;
   DATA.cidx = Object.fromEntries(d.channels.map((c,i) => [c.name, i]));
-  buildSources(); buildChannels(); search();
+  buildSources(); buildChannels(); wirePlayer(); refresh();
 });
 
 function shortName(n){ const p = n.split("/"); return p.slice(-2).join("/"); }
+function refresh(){ search(); if(lastSeg) drawTimeline(lastSeg.stim); }
 
 function buildSources(){
   const s = new Set(DATA.segments.map(x => x.src).filter(Boolean));
   const sel = document.getElementById("src");
   [...s].sort().forEach(v => { const o=document.createElement("option"); o.value=o.textContent=v; sel.appendChild(o); });
-  sel.onchange = search;
-  document.getElementById("topn").onchange = search;
+  sel.onchange = refresh;
+  document.getElementById("topn").onchange = refresh;
 }
 
 function buildChannels(){
@@ -99,16 +121,16 @@ function buildChannels(){
       const cb = document.createElement("input"); cb.type="checkbox";
       const lab = document.createElement("label"); lab.textContent = shortName(c.name); lab.title=c.name;
       const dir = document.createElement("span"); dir.className="dir high"; dir.textContent="High";
-      cb.onchange = () => {  // respect the currently-displayed High/Low direction
+      cb.onchange = () => {
         if(cb.checked) SEL.set(c.name, dir.classList.contains("high") ? 1 : -1);
         else SEL.delete(c.name);
-        search();
+        refresh();
       };
       dir.onclick = () => {
         const hi = dir.classList.contains("high");
         dir.classList.toggle("high",!hi); dir.classList.toggle("low",hi);
         dir.textContent = hi ? "Low" : "High";
-        if(cb.checked){ SEL.set(c.name, hi ? -1 : 1); search(); }
+        if(cb.checked){ SEL.set(c.name, hi ? -1 : 1); refresh(); }
       };
       lab.onclick = () => { cb.checked=!cb.checked; cb.onchange(); };
       row.append(cb,lab,dir); host.appendChild(row);
@@ -127,7 +149,7 @@ function score(seg){
     const i = DATA.cidx[name], v = seg.v[i];
     if(v==null) continue;
     const c = DATA.channels[i];
-    if(!(c.std > 0)) continue;              // guard: never divide by zero std
+    if(!(c.std > 0)) continue;
     sum += dir * (v - c.mean)/c.std; k++;
   }
   return {score: k ? sum/k : -Infinity, k};
@@ -145,17 +167,16 @@ function search(){
   segs.forEach((x,n) => {
     const s = x.s;
     const row = document.createElement("div"); row.className="seg";
+    if(lastSeg && s.stim===lastSeg.stim && s.t0===lastSeg.t0) row.classList.add("active");
     row.innerHTML =
-      `<div class="rank">${n+1}</div>
-       <div class="meta"><span class="sid"></span>
-         <span class="time"></span>
-         <div class="chips"></div></div>
-       <div class="score">${x.score.toFixed(2)}</div>`;
-    // ids/sources come from filenames — set via textContent, never innerHTML
+      `<div class="top"><div class="rank">${n+1}</div>
+         <div class="meta"><span class="sid"></span> <span class="time"></span></div>
+         <div class="score">${x.score.toFixed(2)}</div></div>
+       <div class="chips"></div>
+       <div class="btns"></div>`;
     row.querySelector(".sid").textContent = s.stim;
-    const cov = x.k < SEL.size ? ` · ${x.k}/${SEL.size} features` : "";
-    row.querySelector(".time").textContent =
-      `  ${s.t0.toFixed(0)}–${s.t1.toFixed(0)}s · ${s.src}${cov}`;
+    const cov = x.k < SEL.size ? ` · ${x.k}/${SEL.size} feat` : "";
+    row.querySelector(".time").textContent = `${s.t0.toFixed(0)}–${s.t1.toFixed(0)}s${cov}`;
     const chipHost = row.querySelector(".chips");
     for(const nm of SEL.keys()){
       const v = s.v[DATA.cidx[nm]];
@@ -164,26 +185,179 @@ function search(){
       chip.textContent = `${shortName(nm)}: ${(+v).toPrecision(3)}`;
       chipHost.appendChild(chip);
     }
-    const btn = document.createElement("button"); btn.className="play";
+    const btns = row.querySelector(".btns");
     const playable = s.media && s.modality !== "text-only";
-    btn.textContent = s.modality === "audio-only" ? "▶ ♪" : "▶ Play";
-    btn.title = s.modality === "audio-only" ? "audio-only stimulus" : "";
-    btn.disabled = !playable; btn.onclick = () => playSeg(s);
-    row.appendChild(btn); out.appendChild(row);
+    const audio = s.modality === "audio-only";
+    const bSeg = document.createElement("button"); bSeg.className="play";
+    bSeg.textContent = audio ? "♪ Segment" : "▶ Segment";
+    const bClip = document.createElement("button"); bClip.className="play";
+    bClip.textContent = audio ? "♪ Clip" : "▶ Clip";
+    bSeg.disabled = bClip.disabled = !playable;
+    if(!playable){ bSeg.title = bClip.title = "text-only stimulus (no media)"; }
+    bSeg.onclick  = () => { loadSegment(s); playSegment(); };
+    bClip.onclick = () => { loadSegment(s); playClip(); };
+    btns.append(bSeg, bClip);
+    out.appendChild(row);
   });
   if(!segs.length) out.innerHTML = '<div class="muted">No matching segments.</div>';
 }
 
-function playSeg(s){
-  const v = document.getElementById("vid"), now = document.getElementById("now");
-  now.textContent = `${s.stim}  ${s.t0.toFixed(0)}–${s.t1.toFixed(0)}s` +
-                    (s.modality === "audio-only" ? "  (audio)" : "");
-  v.onerror = () => { now.textContent = `Cannot play ${s.stim} (unsupported media)`;
-                      delete v.dataset.media; };   // allow retry, don't dead-end
+/* ---------------- player ---------------- */
+
+function wirePlayer(){
+  const v = vid();
+  document.getElementById("playSeg").onclick  = () => { if(lastSeg) playSegment(); };
+  document.getElementById("playClip").onclick = () => { if(lastSeg) playClip(); };
+  v.addEventListener("play", () => { if(!rafId) rafId = requestAnimationFrame(tick); });
+  v.addEventListener("timeupdate", updateDot);
+  v.addEventListener("seeked", updateDot);
+  v.addEventListener("loadedmetadata", () => { if(lastSeg) drawTimeline(lastSeg.stim); });
+  v.onerror = () => {
+    if(!lastSeg) return;
+    document.getElementById("now").textContent = `Cannot play ${lastSeg.stim} (unsupported/missing media)`;
+    delete v.dataset.media;                       // allow retry, don't dead-end
+  };
+}
+
+function loadSegment(s){
+  lastSeg = s;
+  const v = vid();
   if(v.dataset.media !== s.media){ v.src = s.media; v.dataset.media = s.media; }
-  const start = () => { v.currentTime = s.t0; v.play(); };
-  if(v.readyState>=1) start(); else v.onloadedmetadata = start;
-  v.ontimeupdate = () => { if(v.currentTime >= s.t1) { v.pause(); v.ontimeupdate=null; } };
+  document.getElementById("playSeg").disabled = false;
+  document.getElementById("playClip").disabled = false;
+  search();                                       // re-highlight the active row
+  drawTimeline(s.stim);
+}
+
+function seekAndPlay(t){
+  const v = vid();
+  const go = () => {
+    try { v.currentTime = t; } catch(e) {}
+    v.play().catch(()=>{});
+  };
+  // readyState >= 1 (HAVE_METADATA) means duration/seeking are available.
+  if(v.readyState >= 1) go();
+  else v.addEventListener("loadedmetadata", go, { once:true });
+}
+
+function playSegment(){
+  if(!lastSeg) return;
+  const s = lastSeg;
+  curRange = { from:s.t0, to:s.t1 };
+  document.getElementById("now").textContent =
+    `${s.stim} — segment ${s.t0.toFixed(0)}–${s.t1.toFixed(0)}s` + (s.modality==="audio-only"?"  (audio)":"");
+  seekAndPlay(s.t0);
+}
+
+function playClip(){
+  if(!lastSeg) return;
+  const s = lastSeg;
+  curRange = { from:0, to:Infinity };
+  document.getElementById("now").textContent =
+    `${s.stim} — full clip` + (s.modality==="audio-only"?"  (audio)":"");
+  seekAndPlay(0);
+}
+
+function tick(){
+  const v = vid();
+  if(curRange && isFinite(curRange.to) && v.currentTime >= curRange.to){ v.pause(); }
+  updateDot();
+  rafId = (!v.paused && !v.ended) ? requestAnimationFrame(tick) : null;
+}
+
+/* ---------------- feature time series ---------------- */
+
+const SVGNS = "http://www.w3.org/2000/svg";
+const W = 1000, H = 190, pL = 6, pR = 6, pT = 12, pB = 20;
+
+function interpZ(pts, t){
+  if(!pts.length) return null;
+  if(t <= pts[0].t) return pts[0].z;
+  if(t >= pts[pts.length-1].t) return pts[pts.length-1].z;
+  for(let i=1;i<pts.length;i++){
+    if(t <= pts[i].t){
+      const a=pts[i-1], b=pts[i], f=(t-a.t)/((b.t-a.t)||1);
+      return a.z + f*(b.z-a.z);
+    }
+  }
+  return pts[pts.length-1].z;
+}
+
+function drawTimeline(stim){
+  const host = document.getElementById("tl");
+  const feats = [...SEL.keys()];
+  const segsFor = DATA.segments.filter(x => x.stim===stim).sort((a,b)=>a.t0-b.t0);
+  if(!feats.length || !segsFor.length){
+    host.innerHTML = '<div class="cap">Select one or more features to plot their time course over the clip.</div>';
+    TL = null; return;
+  }
+  const v = vid();
+  const tMax = (v.duration && isFinite(v.duration)) ? v.duration : segsFor[segsFor.length-1].t1;
+  const series = feats.map((nm,fi) => {
+    const i = DATA.cidx[nm], c = DATA.channels[i];
+    const pts = segsFor.map(sg => {
+      const raw = sg.v[i];
+      return raw==null ? null : { t:(sg.t0+sg.t1)/2, z:(raw-c.mean)/(c.std||1), raw };
+    }).filter(Boolean);
+    return { name:nm, color:PALETTE[fi%PALETTE.length], pts };
+  }).filter(s => s.pts.length);
+
+  if(!series.length){ host.innerHTML = '<div class="cap">Selected feature(s) not measured for this clip.</div>'; TL=null; return; }
+
+  let zmin=Infinity, zmax=-Infinity;
+  series.forEach(s => s.pts.forEach(p => { zmin=Math.min(zmin,p.z); zmax=Math.max(zmax,p.z); }));
+  if(zmin===zmax){ zmin-=1; zmax+=1; }
+  const pad=(zmax-zmin)*0.08; zmin-=pad; zmax+=pad;
+  const X = t => pL + (t/tMax)*(W-pL-pR);
+  const Y = z => pT + (1-(z-zmin)/(zmax-zmin))*(H-pT-pB);
+
+  // legend
+  const lg = series.map(s =>
+    `<span class="k"><i style="background:${s.color}"></i>${shortName(s.name)} <b data-lg="${s.name}"></b></span>`).join("");
+
+  // static SVG (axes, zero line, polylines, points)
+  let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`;
+  svg += `<line x1="${pL}" y1="${H-pB}" x2="${W-pR}" y2="${H-pB}" stroke="#c8ced4"/>`;
+  if(zmin < 0 && zmax > 0){ const y0=Y(0); svg += `<line x1="${pL}" y1="${y0}" x2="${W-pR}" y2="${y0}" stroke="#e3e7ec" stroke-dasharray="4 4"/>`; }
+  series.forEach(s => {
+    const d = s.pts.map(p => `${X(p.t).toFixed(1)},${Y(p.z).toFixed(1)}`).join(" ");
+    svg += `<polyline points="${d}" fill="none" stroke="${s.color}" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
+  });
+  // time labels
+  const mid=(tMax/2);
+  svg += `<text x="${pL}" y="${H-6}" font-size="11" fill="#889">0s</text>`;
+  svg += `<text x="${X(mid)}" y="${H-6}" font-size="11" fill="#889" text-anchor="middle">${mid.toFixed(0)}s</text>`;
+  svg += `<text x="${W-pR}" y="${H-6}" font-size="11" fill="#889" text-anchor="end">${tMax.toFixed(0)}s</text>`;
+  // playhead + dots (updated live)
+  svg += `<line id="tlph" x1="${pL}" y1="${pT}" x2="${pL}" y2="${H-pB}" stroke="#111" stroke-width="1"/>`;
+  series.forEach((s,fi) => { svg += `<circle data-dot="${fi}" r="4.5" fill="${s.color}" stroke="#fff" stroke-width="1.5" cx="${pL}" cy="${Y(s.pts[0].z)}"/>`; });
+  svg += `</svg>`;
+
+  host.innerHTML = `<div class="lg">${lg}</div>${svg}
+     <div class="cap">Feature values (z-scored across the corpus) over the full clip; the marker tracks playback.</div>`;
+
+  TL = { stim, tMax, series, X, Y,
+         svg: host.querySelector("svg"),
+         ph: host.querySelector("#tlph"),
+         dots: [...host.querySelectorAll("[data-dot]")],
+         lgVals: Object.fromEntries(series.map(s => [s.name, host.querySelector(`[data-lg="${CSS.escape(s.name)}"]`)])) };
+  updateDot();
+}
+
+function updateDot(){
+  if(!TL) return;
+  const t = vid().currentTime || 0;
+  const x = TL.X(Math.min(t, TL.tMax));
+  TL.ph.setAttribute("x1", x); TL.ph.setAttribute("x2", x);
+  TL.series.forEach((s,fi) => {
+    const z = interpZ(s.pts, t);
+    if(z==null) return;
+    TL.dots[fi].setAttribute("cx", x);
+    TL.dots[fi].setAttribute("cy", TL.Y(z));
+    // show the raw (un-z-scored) value at the playhead in the legend
+    const a = s.pts.reduce((best,p) => Math.abs(p.t-t)<Math.abs(best.t-t)?p:best, s.pts[0]);
+    if(TL.lgVals[s.name]) TL.lgVals[s.name].textContent = a ? `= ${a.raw.toPrecision(3)}` : "";
+  });
 }
 </script>
 </body>
