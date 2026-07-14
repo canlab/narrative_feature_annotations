@@ -153,7 +153,8 @@ Details: [`../analysis/web/README.md`](../analysis/web/README.md).
 | `featuresToTable(ann)` | one clip → wide table with **every vector expanded** into per-component columns (~2.7k vars) |
 | `readAnnotationCorpusFull(folder)` | stack the whole corpus with vectors expanded → `C.X [timepoints × ~2.7k vars]` + `C.info` |
 | `plotFeatureMatrix(C)` | heatmap of the full feature time series, color-coded by category |
-| `factorAnalysisCorpus(C)` | exploratory factor analysis (EFA / `factoran`) + color-coded loadings plot |
+| `factorAnalysisCorpus(C)` | exploratory factor analysis (EFA / `factoran`) across all features + color-coded loadings plot |
+| `extractCategoryFactors(C)` | factor analysis **within each model/category** → `C.extracted_factors` (per-model factor time series), saveable to `.mat` |
 
 ---
 

@@ -5,12 +5,14 @@
 % See docs/CONTENTS.md for the full guide.
 
 %% 0. Setup  — put matlab/ on the path and cd to the project root
-here = fileparts(mfilename("fullpath"));
-if isempty(here); here = pwd; end       % "Run Section" mode: mfilename is empty
+clear here proj
+here = pwd;
 proj = fileparts(here);                 % docs/ -> project root
+
 if ~isfolder(fullfile(proj, "matlab")) && isfolder(fullfile(here, "matlab"))
     proj = here;                        % already at the project root (common cwd)
 end
+
 assert(isfolder(fullfile(proj, "matlab")), ...
     "Run from the project root or docs/ (matlab/ not found from here).");
 addpath(fullfile(proj, "matlab"));
@@ -57,10 +59,26 @@ annotationMovieViewer(movie, annDir);
 %       ["audio/low_level/rms","visual/dynamic_motion/flow_magnitude"], "Speed", 1.5)
 
 %% 5. Load the WHOLE corpus (all annotated stimuli) into one structure
+% C holds ALL clips concatenated, NOT a single movie/story. Structure of C:
+%   C.X        [totalTimepoints x channels] the stacked feature matrix. Here 28237 x 65.
+%              ROWS are timepoints (1 per second of the common grid) from every clip
+%              stacked end-to-end -- they are NOT seconds. Use C.time_sec for the
+%              within-clip time and C.stim to know which clip a row belongs to.
+%   C.stim     [totalTimepoints x 1] categorical stimulus id for each row of C.X
+%   C.time_sec [totalTimepoints x 1] within-clip time (s) for each row
+%   C.channels [1 x 65] the column names of C.X
+%   C.ids      [1 x 83] stimulus ids ;  C.nT samples per clip ;  C.ann full structs
+% IMPORTANT: readAnnotationCorpus returns ONLY the 65 scalar channels (luminance, RMS,
+% word_rate, valence, ...). The multivariate model outputs -- the SigLIP / DINOv2 / CLAP
+% embeddings, AudioSet tags, VideoMAE action posteriors, EmoNet, MFCC, etc. -- are NOT
+% in this C.X. To get every variable (all ~2768, embeddings included) use the FULL
+% reader in section 8 (readAnnotationCorpusFull), whose F.info gives, per column, the
+% class/subclass/level/model and whether it is an embedding (F.info.IsEmbedding).
 C = readAnnotationCorpus("annotations/corpus");
-% C.X is [totalTimepoints x channels]; C.stim / C.time_sec label each row.
-fprintf("corpus: %d stimuli, %d channels, %d timepoints\n", ...
+fprintf("corpus: %d stimuli, %d scalar channels, %d timepoints\n", ...
         numel(C.ids), numel(C.channels), size(C.X,1));
+% Rows for one clip: pick them with the stimulus id, e.g.
+%   r = C.stim == "BigBuckBunny";  plot(C.time_sec(r), C.X(r, 1));
 
 %% 6. Cross-feature STRUCTURE: correlation, PCA, network graphs
 % Saves figures to analysis/figures/ and returns a results struct.
@@ -99,7 +117,32 @@ r  = F.stim == "BigBuckBunny";
 figure; plot(F.time_sec(r), fa.scores(r, 1:3)); legend("F1","F2","F3");
 xlabel("time (s)"); ylabel("factor score"); title("Factor time series — BigBuckBunny");
 
-%% 9. Where to go next
+%% 9. PER-CATEGORY factors: reduce each model's output to a few factors
+% Runs factor analysis SEPARATELY within each category -- each of the 13 multivariate
+% model outputs (SigLIP/DINOv2/CLAP embeddings, AudioSet, action, EmoNet, text-emotion,
+% probes, MFCC, chroma, facial affect, text sentiment) AND the interpretable-scalar
+% block -- and attaches the factor time series to F as F.extracted_factors. FACTORAN is
+% used where a block's degrees of freedom allow; the high-dimensional opaque embeddings
+% fall back to PCA. The .mat is saved for reuse (regenerable; kept in Dropbox only).
+F = extractCategoryFactors(F, "NumFactors", 10, "Save", "analysis/extracted_factors.mat");
+EF = F.extracted_factors;
+fprintf("extracted %d factors across %d categories\n", size(EF.scores,2), numel(EF.byCategory));
+disp(EF.labels(1:6, :))                                % FactorName, Category, Model, Class, Method, VarExpl
+
+% Access one model's factors as a time series (e.g. the SigLIP visual embedding):
+s  = EF.byCategory;
+si = s(strcmp(string({s.name}), "siglip_embedding"));  % 768 dims -> 10 PCA factors
+r  = F.stim == "BigBuckBunny";
+figure; plot(F.time_sec(r), si.scores(r, 1:3));
+legend("F1","F2","F3"); xlabel("time (s)"); ylabel("factor score");
+title("SigLIP embedding factors — BigBuckBunny");
+
+% Reload later without recomputing, and merge back into a corpus struct:
+%   S = load("analysis/extracted_factors.mat");     % -> S.extracted_factors
+%   F = readAnnotationCorpusFull("annotations/corpus");
+%   F.extracted_factors = S.extracted_factors;      % rows align with F.X / F.stim
+
+%% 10. Where to go next
 % - Inspect any other stimulus: change `stimId` in section 0.
 % - Annotate a NEW movie (Python):
 %     PYTHONPATH=src .venv/bin/python -m nfe.run <movie> --vision --audio-hl --events \

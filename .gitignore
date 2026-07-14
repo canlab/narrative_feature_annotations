@@ -15,6 +15,10 @@ __pycache__/
 # run logs
 /logs/
 
+# Large derived analysis artifact (per-model factor scores over all 28k timepoints,
+# ~36 MB). Regenerate in MATLAB with extractCategoryFactors; kept Dropbox-only.
+/analysis/extracted_factors.mat
+
 # Reference PDFs — copyrighted publisher/preprint PDFs of the papers behind each
 # model. Kept in Dropbox only, excluded from git (the docs link to public arXiv/DOI
 # URLs instead, which resolve on the web book). See PDFs/README.md.
