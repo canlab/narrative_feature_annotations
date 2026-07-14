@@ -15,6 +15,11 @@ __pycache__/
 # run logs
 /logs/
 
+# Reference PDFs — copyrighted publisher/preprint PDFs of the papers behind each
+# model. Kept in Dropbox only, excluded from git (the docs link to public arXiv/DOI
+# URLs instead, which resolve on the web book). See PDFs/README.md.
+/PDFs/
+
 # Annotation derivatives — kept in Dropbox only, excluded from git by choice.
 # The docs site does NOT need them (it uses analysis/figures + analysis/web).
 # Regenerate from the media with the pipeline; or host the dataset on OSF/Zenodo.

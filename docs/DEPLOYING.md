@@ -13,9 +13,9 @@ This project mixes small, shareable text with large, copyrighted media. The spli
 | Pipeline code (`src/`, `matlab/`, `tools/`) | Stimulus **media** — the movies and audio (`data/**/*.mp4,*.wav,…`, ~11 GB) |
 | Docs (`docs/`, `README.md`) and the book config (`book/book.toml`) | Annotation **derivatives** (`annotations/`, ~217 MB of `.h5` + sidecars) |
 | Schema (`schema/`), figures (`analysis/figures/`), search index (`analysis/web/`) | |
-| Corpus **metadata** (`data/manifest.csv`, `data/**/SOURCES.md`, lexicon CSVs, text story) | |
+| Corpus **metadata** (`data/manifest.csv`, `data/**/SOURCES.md`, lexicon CSVs, text story) | Reference **PDFs** (`PDFs/`, ~100 MB) — publisher/preprint PDFs of the papers behind each model |
 
-Why the media and annotations stay out of git:
+Why the media, annotations, and reference PDFs stay out of git:
 
 - **Media** exceed GitHub's 100 MB per-file limit and are **copyrighted** (the `spacetop`
   clips, the *Narratives* audio, and *Kung Fury* are third-party IP). Only the CC-BY
@@ -23,6 +23,8 @@ Why the media and annotations stay out of git:
 - **Annotations** are large derivatives (and their ASR transcripts reproduce film
   dialogue). They are regenerable from the media, so they are kept in Dropbox and can be
   published separately (e.g. OSF/Zenodo with a DOI) if a citable dataset is wanted.
+- **Reference PDFs** (`PDFs/`) are copyrighted publisher/preprint copies kept for offline
+  convenience; the docs link to the public arXiv/DOI URLs instead, so the site needs no PDFs.
 
 The published site does **not** need either: it is built from the docs, the figures, and
 the interactive search index, all of which are committed.

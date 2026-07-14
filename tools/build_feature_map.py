@@ -39,6 +39,138 @@ SUBLABEL = {  # prettier subclass names
     "depicted": "depicted affect", "(direct)": "",
 }
 
+# Human-readable chip labels, keyed by full channel path (leaf names are NOT unique
+# across classes, e.g. dominance/entropy/arousal recur). The count in parentheses is
+# added automatically from the template (a vector's dim, or a categorical's number of
+# levels), so a chip reads e.g. "action category (400)". Scalars/labels get no count.
+LABELS = {
+    # visual — low-level static
+    "visual/low_level_static/luminance": "luminance",
+    "visual/low_level_static/rms_contrast": "RMS contrast",
+    "visual/low_level_static/r_mean": "red level",
+    "visual/low_level_static/g_mean": "green level",
+    "visual/low_level_static/b_mean": "blue level",
+    "visual/low_level_static/hue_mean": "hue",
+    "visual/low_level_static/sat_mean": "saturation",
+    "visual/low_level_static/val_mean": "brightness",
+    "visual/low_level_static/colorfulness": "colorfulness",
+    "visual/low_level_static/edge_density": "edge density",
+    "visual/low_level_static/entropy": "image entropy",
+    "visual/low_level_static/fft_slope": "spatial-frequency slope",
+    # visual — high-level semantics
+    "visual/high_level_static/siglip_embedding": "SigLIP embedding",
+    "visual/high_level_static/siglip_probe": "SigLIP scene probes",
+    "visual/high_level_static/dino_embedding": "DINOv2 embedding",
+    # visual — motion
+    "visual/dynamic_motion/flow_magnitude": "optical-flow magnitude",
+    "visual/dynamic_motion/camera_motion": "camera motion",
+    "visual/dynamic_motion/residual_motion": "object motion",
+    "visual/dynamic_motion/cut": "shot cut",
+    "visual/dynamic_motion/shot_index": "shot number",
+    # visual — action
+    "visual/action/action_posteriors": "action probabilities",
+    "visual/action/action_top": "action category",
+    # visual — faces / bodies / gaze
+    "visual/faces_bodies_gaze/faces_present": "face present?",
+    "visual/faces_bodies_gaze/n_faces": "face count",
+    "visual/faces_bodies_gaze/face_det_prob": "face confidence",
+    "visual/faces_bodies_gaze/max_face_frac": "largest-face size",
+    "visual/faces_bodies_gaze/pose_present": "body present?",
+    "visual/faces_bodies_gaze/n_persons": "person count",
+    "visual/faces_bodies_gaze/mean_kp_score": "pose confidence",
+    # visual — saliency / depth
+    "visual/saliency_aesthetics_depth/saliency_mean": "saliency (mean)",
+    "visual/saliency_aesthetics_depth/saliency_peak": "saliency peak",
+    "visual/saliency_aesthetics_depth/saliency_entropy": "saliency spread",
+    "visual/saliency_aesthetics_depth/salient_area_frac": "salient area",
+    "visual/saliency_aesthetics_depth/depth_mean": "depth (mean)",
+    "visual/saliency_aesthetics_depth/depth_range": "depth range",
+    "visual/saliency_aesthetics_depth/depth_entropy": "depth complexity",
+    "visual/saliency_aesthetics_depth/foreground_frac": "foreground fraction",
+    # audio — low-level acoustics
+    "audio/low_level/rms": "loudness (RMS)",
+    "audio/low_level/f0": "pitch (F0)",
+    "audio/low_level/tempo": "tempo (BPM)",
+    "audio/low_level/onset_strength": "onset strength",
+    "audio/low_level/zcr": "zero-crossing rate",
+    "audio/low_level/spectral_centroid": "spectral centroid",
+    "audio/low_level/spectral_bandwidth": "spectral bandwidth",
+    "audio/low_level/spectral_rolloff": "spectral rolloff",
+    "audio/low_level/spectral_flatness": "spectral flatness",
+    "audio/low_level/mfcc": "MFCC timbre",
+    "audio/low_level/chroma": "chroma (pitch class)",
+    # audio — events / scenes
+    "audio/high_level/audioset_tags": "AudioSet sound tags",
+    "audio/high_level/audioset_top": "top sound category",
+    "audio/high_level/clap_embedding": "CLAP audio embedding",
+    "audio/high_level/clap_probe": "CLAP sound probes",
+    # audio — speech
+    "audio/speech/speech_present": "speech present?",
+    "audio/speech/word_rate": "speaking rate",
+    "audio/speech/asr_text": "transcript (ASR)",
+    "audio/speech/voice_valence": "voice valence",
+    "audio/speech/voice_arousal": "voice arousal",
+    "audio/speech/voice_dominance": "voice dominance",
+    # language — lexical
+    "language/lexical/valence": "word valence",
+    "language/lexical/arousal": "word arousal",
+    "language/lexical/dominance": "word dominance",
+    "language/lexical/concreteness": "word concreteness",
+    "language/lexical/aoa": "age of acquisition",
+    "language/lexical/freq_zipf": "word frequency",
+    "language/lexical/surprisal": "word surprisal",
+    "language/lexical/entropy": "next-word entropy",
+    "language/lexical/word_length": "word length",
+    # language — syntax
+    "language/syntax/content_frac": "content-word fraction",
+    "language/syntax/noun_frac": "noun fraction",
+    "language/syntax/verb_frac": "verb fraction",
+    "language/syntax/tree_depth": "parse-tree depth",
+    "language/syntax/mean_dep_distance": "dependency distance",
+    # situation
+    "situation/event_boundary": "event boundary",
+    "situation/event_id": "event number",
+    "situation/setting": "setting",
+    "situation/indoor_outdoor": "indoor / outdoor",
+    "situation/scene_description": "scene description",
+    # social
+    "social/n_agents": "agent count",
+    "social/interaction_type": "interaction type",
+    "social/dominance": "social dominance",
+    "social/min_pair_distance": "closest-pair distance",
+    # affect — depicted
+    "affect/depicted/emonet": "EmoNet emotions",
+    "affect/depicted/emonet_top": "EmoNet top emotion",
+    "affect/depicted/face_emotion": "facial emotions",
+    "affect/depicted/face_emotion_top": "top facial emotion",
+    "affect/depicted/face_valence": "face valence",
+    "affect/depicted/face_arousal": "face arousal",
+    "affect/depicted/text_emotion": "text emotions",
+    "affect/depicted/text_emotion_top": "top text emotion",
+    "affect/depicted/text_sentiment": "text sentiment",
+    "affect/depicted/text_sentiment_top": "top sentiment",
+    "affect/depicted/text_sentiment_polarity": "sentiment polarity",
+    "affect/depicted/vlm_emotion": "scene emotion (VLM)",
+    "affect/depicted/vlm_valence": "scene valence (VLM)",
+    "affect/depicted/vlm_arousal": "scene arousal (VLM)",
+}
+
+
+def leaf_count(ch):
+    """Number of levels/dimensions a channel carries, or None for a single value."""
+    if ch.get("dtype") == "vector":
+        return ch.get("dim")
+    if ch.get("dtype") == "categorical" and ch.get("categories"):
+        return len(ch["categories"])
+    return None
+
+
+def chip_text(ch):
+    """Human-readable chip label + parenthetical count of levels/dims where >1."""
+    label = LABELS.get(ch["path"], ch["path"].split("/")[-1].replace("_", " "))
+    n = leaf_count(ch)
+    return f"{label} ({n})" if n else label
+
 # ---- geometry ----
 MARGIN, TOP = 42, 168
 CARD_W, GAPX = 452, 26
@@ -63,8 +195,8 @@ def load_tree():
         tree[cls] = OrderedDict()
     for c in sorted(t["channels"], key=lambda c: c["path"]):
         p = c["path"].split("/")
-        cls, sub, leaf = p[0], (p[1] if len(p) > 2 else "(direct)"), p[-1]
-        tree.setdefault(cls, OrderedDict()).setdefault(sub, []).append(leaf)
+        cls, sub = p[0], (p[1] if len(p) > 2 else "(direct)")
+        tree.setdefault(cls, OrderedDict()).setdefault(sub, []).append(c)   # full channel
     # order subclasses by size (desc) for tidy packing
     for cls in tree:
         tree[cls] = OrderedDict(sorted(tree[cls].items(), key=lambda kv: -len(kv[1])))
@@ -95,8 +227,8 @@ def render_card(cls, subs):
             y += SUB_GAP + 12
         cx, cy = PAD, y
         chip_fill, chip_txt = mix(base, "#ffffff", 0.86), mix(base, "#000000", 0.45)
-        for leaf in leaves:
-            txt = leaf.replace("_", " ")
+        for ch in leaves:
+            txt = chip_text(ch)
             w = chip_w(txt)
             if cx + w > PAD + inner_w and cx > PAD:      # wrap
                 cx = PAD; cy += CHIP_H + LINE_GAP
@@ -143,8 +275,9 @@ def main():
              f'{total} computational annotation channels across six feature classes, on a shared '
              f'1&#8202;Hz time grid.</text>',
              f'<text x="{MARGIN}" y="122" font-family="{FONT}" font-size="12.5" fill="#94a3b8">'
-             f'Each chip is one channel (a value series + provenance). Channels that do not apply '
-             f'to a stimulus are stored as explicit nulls. Generated from schema/channel_template.json.</text>']
+             f'Each chip is one channel (a value series + provenance); a number in parentheses is how '
+             f'many levels/dimensions it carries (e.g. action category (400) = 400 action types). '
+             f'Generated from schema/channel_template.json.</text>']
     for x, y, svg in placed:
         parts.append(f'<g transform="translate({x},{y})">{svg}</g>')
     parts.append("</svg>")
