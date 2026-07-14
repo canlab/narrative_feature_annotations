@@ -78,7 +78,28 @@ sel = selectStimulusSet(C, "SegLength", 10, "NumPCs", 10, "K", 20);
 disp(sel.table)                          % rank, stimulus, t_start, t_end, dur_s
 % sel.objTrace vs sel.randTrace quantifies the gain over random selection.
 
-%% 8. Where to go next
+%% 8. FULL feature set: all ~2,768 variables, color-coded, + factor analysis
+% readAnnotationCorpus (above) keeps only scalar channels. To get EVERY variable —
+% each vector channel (SigLIP/DINOv2/CLAP embeddings, AudioSet/action posteriors,
+% EmoNet, MFCC, ...) expanded into one column per component — use the FULL reader.
+F = readAnnotationCorpusFull("annotations/corpus");    % F.X [timepoints x ~2768]
+% F.info is the label table: one row per column, with class/subclass/level/model/color.
+fprintf("full set: %d variables (%d embedding, %d interpretable) over %d timepoints\n", ...
+        size(F.X,2), sum(F.info.IsEmbedding), sum(~F.info.IsEmbedding), size(F.X,1));
+
+% Visualize the whole feature matrix for one clip, color-coded by category:
+plotFeatureMatrix(F, "Clip", "BigBuckBunny");          % heatmap; class color strip on the left
+% plotFeatureMatrix(F, "Mode","classmean");            % or six class-mean trajectories
+
+% Exploratory factor analysis (interpretable features by default; excludes the opaque
+% embeddings and the big AudioSet/Kinetics taxonomies). Returns rotated loadings +
+% a per-timepoint factor-score time series you can plot like any feature.
+fa = factorAnalysisCorpus(F, "NumFactors", 10);        % draws loadings heatmap + scree
+r  = F.stim == "BigBuckBunny";
+figure; plot(F.time_sec(r), fa.scores(r, 1:3)); legend("F1","F2","F3");
+xlabel("time (s)"); ylabel("factor score"); title("Factor time series — BigBuckBunny");
+
+%% 9. Where to go next
 % - Inspect any other stimulus: change `stimId` in section 0.
 % - Annotate a NEW movie (Python):
 %     PYTHONPATH=src .venv/bin/python -m nfe.run <movie> --vision --audio-hl --events \

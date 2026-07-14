@@ -145,10 +145,15 @@ Details: [`../analysis/web/README.md`](../analysis/web/README.md).
 | `readAnnotations(path)` | load one `.h5`/folder/JSON → struct (stimulus, time_sec, features) |
 | `getFeature(ann, "audio/low_level/mfcc")` | one channel + metadata by hierarchical path |
 | `featuresToTimetable(ann)` | scalar channels → timetable on the common grid |
-| `readAnnotationCorpus(folder)` | stack the whole corpus → `C.X [timepoints × channels]` |
+| `readAnnotationCorpus(folder)` | stack the whole corpus → `C.X [timepoints × channels]` (**scalar** channels only) |
 | `annotationMovieViewer(movie, ann)` | play movie with synced annotation time series + marker |
 | `analyzeCorpus(C)` | correlation heatmap, PCA, channel + class network graphs |
 | `selectStimulusSet(C)` | D-optimal high-variance / low-redundancy segment selection |
+| `featureInfo()` | label/category table for **all** expanded variables (class, subclass, level, model, color) |
+| `featuresToTable(ann)` | one clip → wide table with **every vector expanded** into per-component columns (~2.7k vars) |
+| `readAnnotationCorpusFull(folder)` | stack the whole corpus with vectors expanded → `C.X [timepoints × ~2.7k vars]` + `C.info` |
+| `plotFeatureMatrix(C)` | heatmap of the full feature time series, color-coded by category |
+| `factorAnalysisCorpus(C)` | exploratory factor analysis (EFA / `factoran`) + color-coded loadings plot |
 
 ---
 
@@ -167,13 +172,27 @@ mf  = getFeature(ann, "audio/low_level/mfcc");   % a vector channel [n × 13]
 m = "data/movies/spacetop/videos/ses-01/ses-01_run-01_order-04_content-parkour.mp4";
 annotationMovieViewer(m, "annotations/corpus/ses-01_run-01_order-04_content-parkour")
 
-% 3) Analyze the whole CORPUS
+% 3) Analyze the whole CORPUS (scalar channels — correlation / PCA / design tool)
 C   = readAnnotationCorpus("annotations/corpus");
 res = analyzeCorpus(C);                   % figures → analysis/figures/
 sel = selectStimulusSet(C, "K", 20);      % design a stimulus set; sel.table
 
+% 4) Load the FULL expanded feature set (~2.7k variables: every vector expanded),
+%    visualize it color-coded by category, and extract factors with EFA
+F   = readAnnotationCorpusFull("annotations/corpus");   % F.X [timepoints × ~2768], F.info labels
+plotFeatureMatrix(F, "Clip", "BigBuckBunny");           % heatmap, color-coded by class
+fa  = factorAnalysisCorpus(F, "NumFactors", 10);        % EFA + loadings plot; fa.scores = per-timepoint factors
+
 % Python inspection (alternative): h5py / pandas on <id>.h5 and corpus_index.csv
 ```
+
+> **Two corpus readers.** `readAnnotationCorpus` returns only the **scalar** channels
+> (what `analyzeCorpus`/`selectStimulusSet` expect). `readAnnotationCorpusFull` expands
+> every **vector** channel (SigLIP/DINOv2/CLAP embeddings, AudioSet/action posteriors,
+> EmoNet, MFCC, …) into one column per component — the full ~2,768-variable matrix with a
+> companion `featureInfo` label table (class / subclass / level / model / color) for
+> color-coded plotting and factor analysis. See the
+> [feature map](FEATURE_MAP.md) for how the variables are organized.
 
 ```bash
 # 4) SEARCH segments by feature in the browser (serve from project root)
