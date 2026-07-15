@@ -25,9 +25,11 @@ motivation), clearly and fairly. Be accurate; do not overstate. Narrative ≤ **
      (first principal factor explains only a few %; e.g., action posteriors, DINOv2, SigLIP2,
      AudioSet, EmoNet), others **highly reducible** (first component > 50%; e.g., chroma, sentiment).
 2. **Table 1** — the class × level feature-summary table.
-3. **1–3 figures** from `plotFactorScores` (`matlab/figures/`), placed **after the table**, each
-   with a brief caption. Pick the ones that show the annotations most clearly and beautifully
-   (defaults: `01_factor_timeseries`, `04_correlation_matrix`, `05_tsne`).
+3. **Figures** from `matlab/figures/` (from `plotFactorScores` and
+   `plot_tsne_umap_annotations`), placed **after the table**, each with a brief caption. Pick the
+   ones that show the annotations most clearly and beautifully (defaults: `01_factor_timeseries`,
+   `04_correlation_matrix`, `05_tsne`, and `08_umap_annotations` — the full 2,768-variable
+   annotation space colored by domain, with a legend).
 
 ## How to generate it (mechanics)
 All headline numbers are pulled live so the prose stays correct as the corpus grows:

@@ -48,9 +48,16 @@ data/**/*.mov
 data/**/*.m4v
 data/**/*.avi
 data/**/*.webm
+data/**/*.mpg
+data/**/*.mpeg
+data/**/*.wmv
 data/**/*.wav
 data/**/*.mp3
 data/**/*.m4a
 data/**/*.aac
 data/**/*.flac
 data/**/*.ogg
+# HCP 7T movie clips (~11 GB, credentialed) + iMensa .mov clips are covered above.
+
+# Credentialed subject-level data — never redistribute (HCP data-use terms).
+data/movies/**/*ReleasedSubjs.csv

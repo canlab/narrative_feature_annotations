@@ -55,6 +55,12 @@ FIGURES = [
      "colored by category. Factors from the same model or sensory domain tend to group together, "
      "while emotion and interpretable factors spread across the space, reflecting variance they "
      "share with several modalities."),
+    ("08_umap_annotations",
+     "Figure 4. UMAP embedding of all {n_vars:,} individual feature-variable annotations (not the "
+     "factors), each point one variable colored by feature domain (legend). The variables separate "
+     "cleanly into a large auditory mass and a large visual mass, with the smaller language, "
+     "social, situational, and affective feature sets bridging them — showing that the annotation "
+     "space is organized primarily by sensory modality."),
 ]
 
 
@@ -197,8 +203,10 @@ def main():
          f"{f['text_only']} text), yielding roughly {n_seconds:,} seconds (~{hours:.1f} h) of "
          "annotations sampled once per second on a common time grid. Features that do not apply to "
          "a stimulus (e.g., visual features for an audio-only story) are stored as explicit nulls, "
-         "so the whole corpus stacks into a single rectangular matrix. An interactive browser lets "
-         "users visualize and manually check each feature’s distribution and quality. To "
+         "so the whole corpus stacks into a single rectangular matrix; embedding the full set of "
+         "variables shows that this annotation space is organized primarily by sensory modality "
+         "(Figure 4). An interactive browser lets users visualize and manually check each "
+         "feature’s distribution and quality. To "
          "characterize the structure of the annotation space, we performed exploratory factor "
          "analysis within each domain/model. Some feature sets proved essentially irreducible — the "
          f"first principal factor of {low_txt} each explained only a small share of the variance, "
@@ -222,7 +230,7 @@ def main():
     for m in ("top_margin", "bottom_margin", "left_margin", "right_margin"):
         setattr(psec, m, Inches(0.9))
     para(doc, "Figures", size=13, bold=True, after=6)
-    ctx = {"n_factors": n_factors, "n_seconds": n_seconds}
+    ctx = {"n_factors": n_factors, "n_seconds": n_seconds, "n_vars": f["n_variables"]}
     for stem, caption in FIGURES:
         png = FIGDIR / f"{stem}.png"
         if not png.exists():
