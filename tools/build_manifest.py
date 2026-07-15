@@ -21,7 +21,13 @@ MEDIA_EXT = {".mp4", ".mkv", ".mov", ".avi", ".webm", ".m4v",
              ".wav", ".mp3", ".m4a", ".flac", ".aac", ".ogg"}
 from nfe.ingest import TEXT_EXT, make_stimulus  # noqa: E402
 RIGHTS = {"open": "CC-BY (Blender open movies)", "spacetop": "lab-internal",
-          "stories": "lab-internal"}
+          "stories": "lab-internal", "narratives": "OpenNeuro ds002345 (CC0)",
+          "hcp": "HCP (credentialed; not redistributable)", "imensa": "lab-internal",
+          "kungfury": "third-party (research use)"}
+
+# Path fragments to skip. For HCP we annotate only the Pre_20140821_version clips
+# (more fMRI subjects); the Post_20140821_version clips are near-duplicates.
+SKIP_DIRS = {"Post_20140821_version"}
 
 
 def main():
@@ -36,6 +42,8 @@ def main():
                 continue
             if f.stem.lower() in {"readme", "sources", "contents", "license"}:
                 continue                                   # skip stray doc files
+            if SKIP_DIRS & set(f.parts):
+                continue                                   # e.g. HCP Post_ version (dedup)
             rel = f.relative_to(ROOT)
             parts = f.relative_to(base).parts
             source = parts[0] if len(parts) > 1 else base.name

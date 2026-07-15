@@ -1,5 +1,291 @@
 [
  {
+  "id": "7T_MOVIE1_CC1",
+  "path": "data/movies/hcp/Pre_20140821_version/7T_MOVIE1_CC1.mp4",
+  "source": "hcp",
+  "modality": "audiovisual",
+  "duration_sec": 921.0,
+  "fps": 24.0,
+  "width": 1024,
+  "height": 720,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "HCP (credentialed; not redistributable)"
+ },
+ {
+  "id": "7T_MOVIE2_HO1",
+  "path": "data/movies/hcp/Pre_20140821_version/7T_MOVIE2_HO1.mp4",
+  "source": "hcp",
+  "modality": "audiovisual",
+  "duration_sec": 918.04,
+  "fps": 24.0,
+  "width": 1024,
+  "height": 720,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "HCP (credentialed; not redistributable)"
+ },
+ {
+  "id": "7T_MOVIE3_CC2",
+  "path": "data/movies/hcp/Pre_20140821_version/7T_MOVIE3_CC2.mp4",
+  "source": "hcp",
+  "modality": "audiovisual",
+  "duration_sec": 915.21,
+  "fps": 24.0,
+  "width": 1024,
+  "height": 720,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "HCP (credentialed; not redistributable)"
+ },
+ {
+  "id": "7T_MOVIE4_HO2",
+  "path": "data/movies/hcp/Pre_20140821_version/7T_MOVIE4_HO2.mp4",
+  "source": "hcp",
+  "modality": "audiovisual",
+  "duration_sec": 900.83,
+  "fps": 24.0,
+  "width": 1024,
+  "height": 720,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "HCP (credentialed; not redistributable)"
+ },
+ {
+  "id": "neg-1",
+  "path": "data/movies/imensa/neg-1.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 248.04,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-2",
+  "path": "data/movies/imensa/neg-2.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 173.16,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-3",
+  "path": "data/movies/imensa/neg-3.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 137.44,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-4",
+  "path": "data/movies/imensa/neg-4.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 135.44,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-5",
+  "path": "data/movies/imensa/neg-5.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 250.76,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-6",
+  "path": "data/movies/imensa/neg-6.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 234.28,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-7",
+  "path": "data/movies/imensa/neg-7.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 175.84,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-8",
+  "path": "data/movies/imensa/neg-8.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 201.48,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "neg-9",
+  "path": "data/movies/imensa/neg-9.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 180.08,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-1",
+  "path": "data/movies/imensa/pos-1.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 216.24,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-2",
+  "path": "data/movies/imensa/pos-2.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 240.72,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-3",
+  "path": "data/movies/imensa/pos-3.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 160.72,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-4",
+  "path": "data/movies/imensa/pos-4.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 188.68,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-5",
+  "path": "data/movies/imensa/pos-5.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 160.6,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-6",
+  "path": "data/movies/imensa/pos-6.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 196.12,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-7",
+  "path": "data/movies/imensa/pos-7.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 164.0,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-8",
+  "path": "data/movies/imensa/pos-8.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 176.68,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
+  "id": "pos-9",
+  "path": "data/movies/imensa/pos-9.mov",
+  "source": "imensa",
+  "modality": "audiovisual",
+  "duration_sec": 207.12,
+  "fps": 25.0,
+  "width": 1920,
+  "height": 1080,
+  "has_video": true,
+  "has_audio": true,
+  "rights": "lab-internal"
+ },
+ {
   "id": "kungfury",
   "path": "data/movies/kungfury/kungfury.mp4",
   "source": "kungfury",
@@ -10,7 +296,7 @@
   "height": 1080,
   "has_video": true,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "third-party (research use)"
  },
  {
   "id": "BigBuckBunny",
@@ -699,7 +985,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "bigbang_audio",
@@ -712,7 +998,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "black_audio",
@@ -725,7 +1011,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "bronx_audio",
@@ -738,7 +1024,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "forgot_audio",
@@ -751,7 +1037,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "friends_audio",
@@ -764,7 +1050,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "himym_audio",
@@ -777,7 +1063,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "lucy_audio",
@@ -790,7 +1076,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "merlin_audio",
@@ -803,7 +1089,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "milkywayoriginal_audio",
@@ -816,7 +1102,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "milkywaysynonyms_audio",
@@ -829,7 +1115,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "milkywayvodka_audio",
@@ -842,7 +1128,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "notthefall_audio",
@@ -855,7 +1141,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "notthefallintact_audio",
@@ -868,7 +1154,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "notthefalllongscram_audio",
@@ -881,7 +1167,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "notthefallshortscram_audio",
@@ -894,7 +1180,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "pieman_audio",
@@ -907,7 +1193,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "piemanpni_audio",
@@ -920,7 +1206,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "prettymouth_audio",
@@ -933,7 +1219,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "santa_audio",
@@ -946,7 +1232,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "seinfeld_audio",
@@ -959,7 +1245,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "shame_audio",
@@ -972,7 +1258,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "shapesphysical_audio",
@@ -985,7 +1271,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "shapessocial_audio",
@@ -998,7 +1284,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "sherlock_audio",
@@ -1011,7 +1297,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "slumlordreach_audio",
@@ -1024,7 +1310,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "tunnel_audio",
@@ -1037,7 +1323,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "upintheair_audio",
@@ -1050,7 +1336,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "vinny_audio",
@@ -1063,7 +1349,7 @@
   "height": 0,
   "has_video": false,
   "has_audio": true,
-  "rights": "unknown"
+  "rights": "OpenNeuro ds002345 (CC0)"
  },
  {
   "id": "ministory",
