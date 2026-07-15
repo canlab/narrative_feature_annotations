@@ -42,7 +42,7 @@ arguments
     opts.MatFile (1,1) string = "analysis/extracted_factors.mat"
     opts.OutDir (1,1) string = "matlab/figures"
     opts.CanlabPath (1,1) string = "/Users/f003vz1/Documents/GitHub/CanlabCore/CanlabCore"
-    opts.Clip (1,1) string = "BigBuckBunny"
+    opts.Clip (1,1) string = "kungfury"
     opts.Save (1,1) logical = true
 end
 

@@ -39,11 +39,12 @@ FIGDIR = ROOT / "matlab" / "figures"
 # Figures to embed (file stem, caption). Chosen to show the annotations most clearly.
 FIGURES = [
     ("01_factor_timeseries",
-     "Figure 1. Second-by-second factor time courses for one audiovisual clip. Each horizontal "
-     "trace is one of the {n_factors} per-model factors, colored by feature category (reds = "
-     "emotion/affect, cyans = auditory, blues/purples = visual, gray = interpretable scalars). "
-     "The annotations vary continuously and coherently as the scene unfolds, which is the raw "
-     "material for relating stimulus content to brain responses."),
+     "Figure 1. Second-by-second factor time courses for one audiovisual clip (Kung Fury). Each "
+     "horizontal trace is one of the {n_factors} per-model factors, colored by feature domain "
+     "(reds = emotion/affect, cyans = auditory, blues/purples = visual, orange = language, "
+     "pink = social, green = situational). The annotations vary continuously and coherently as "
+     "the scene unfolds, which is the raw material for relating stimulus content to brain "
+     "responses."),
     ("04_correlation_matrix",
      "Figure 2. Correlation matrix of all {n_factors} factors across the entire corpus "
      "({n_seconds:,} s), ordered and color-labeled by category. Near-zero correlations inside each "
@@ -161,7 +162,7 @@ def main():
     f = facts()
     n_seconds = int(round(f["total_minutes"] * 60))
     hours = f["total_minutes"] / 60
-    n_factors = 129
+    n_factors = 154
     if f.get("reducibility"):
         n_seconds = f["reducibility"].get("n_timepoints", n_seconds)
     low_txt, high_txt = reducibility_phrases(f)

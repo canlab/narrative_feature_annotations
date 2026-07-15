@@ -68,10 +68,17 @@ for i = 1:numel(vecLeaves)
         "class", info.Class(idx(1)), "kind", kind, "cols", idx(:)'); %#ok<AGROW>
 end
 
-sIdx = find(info.Dtype ~= "vector" & info.Numeric);
-
-cats(end+1) = struct("name","interpretable_scalars", "model","(mixed)", ...
-    "class","(mixed)", "kind","interpretable-scalar", "cols", sIdx(:)');
+% Interpretable scalar channels, split BY DOMAIN so each feature class (visual, audio,
+% language, social, situation, affect) forms its own factor category with its own color
+% (previously all scalars were lumped into one "interpretable_scalars" block, so
+% language / social / situation never appeared as their own colored categories).
+sMask = info.Dtype ~= "vector" & info.Numeric;
+for cls = ["visual","audio","language","social","situation","affect"]
+    idx = find(sMask & info.Class == cls);
+    if isempty(idx), continue; end
+    cats(end+1) = struct("name", cls + "_scalars", "model", "(interpretable)", ...
+        "class", cls, "kind", "interpretable-scalar", "cols", idx(:)'); %#ok<AGROW>
+end
 
 % ---- run FA/PCA per category
 byCat = struct([]); allScores = []; FN=strings(0,1); Cat=strings(0,1);
