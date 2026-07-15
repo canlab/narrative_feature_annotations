@@ -155,6 +155,7 @@ Details: [`../analysis/web/README.md`](../analysis/web/README.md).
 | `plotFeatureMatrix(C)` | heatmap of the full feature time series, color-coded by category |
 | `factorAnalysisCorpus(C)` | exploratory factor analysis (EFA / `factoran`) across all features + color-coded loadings plot |
 | `extractCategoryFactors(C)` | factor analysis **within each model/category** → `C.extracted_factors` (per-model factor time series), saveable to `.mat` |
+| `plotFactorScores()` | load the saved factors and visualize 6 ways (time series, mango heatmap, force-directed graph, correlation matrix, t-SNE, UMAP) with CANlab tools; saves svg+png to `matlab/figures/` |
 
 ---
 

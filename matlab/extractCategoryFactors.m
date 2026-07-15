@@ -58,21 +58,27 @@ info = C.info; X = C.X; T = size(X,1);
 vecLeaves = unique(info.Leaf(info.Dtype == "vector"), "stable");
 cats = struct("name",{}, "model",{}, "class",{}, "kind",{}, "cols",{});
 for i = 1:numel(vecLeaves)
+    
     idx = find(info.Leaf == vecLeaves(i));
     kind = "interpretable-vector";
     if info.IsEmbedding(idx(1)), kind = "embedding";
     elseif ismember(vecLeaves(i), ["audioset_tags","action_posteriors"]), kind = "taxonomy"; end
+    
     cats(end+1) = struct("name", vecLeaves(i), "model", info.Model(idx(1)), ...
         "class", info.Class(idx(1)), "kind", kind, "cols", idx(:)'); %#ok<AGROW>
 end
+
 sIdx = find(info.Dtype ~= "vector" & info.Numeric);
+
 cats(end+1) = struct("name","interpretable_scalars", "model","(mixed)", ...
     "class","(mixed)", "kind","interpretable-scalar", "cols", sIdx(:)');
 
 % ---- run FA/PCA per category
 byCat = struct([]); allScores = []; FN=strings(0,1); Cat=strings(0,1);
 Mdl=strings(0,1); Cls=strings(0,1); Meth=strings(0,1); VE=zeros(0,1);
+
 for i = 1:numel(cats)
+
     ca = cats(i);
     cols = ca.cols;
     sub = X(:, cols);
@@ -83,6 +89,7 @@ for i = 1:numel(cats)
     keep = sd > 0 & isfinite(sd);
     sub = sub(:, keep); vinfo = vinfo(keep,:); mu = mu(keep); sd = sd(keep);
     Z = (sub - mu) ./ sd;
+    
     d = size(Z,2);
     if d == 0, continue; end
 

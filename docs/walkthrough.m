@@ -80,6 +80,12 @@ fprintf("corpus: %d stimuli, %d scalar channels, %d timepoints\n", ...
 % Rows for one clip: pick them with the stimulus id, e.g.
 %   r = C.stim == "BigBuckBunny";  plot(C.time_sec(r), C.X(r, 1));
 
+%% 5.2 Read the FULL corpus
+
+C = readAnnotationCorpusFull("annotations/corpus");
+fprintf("corpus: %d clips, %d scalar channels, %d timepoints\n", ...
+    numel(C.ids), size(C.X, 2), size(C.X, 1));
+
 %% 6. Cross-feature STRUCTURE: correlation, PCA, network graphs
 % Saves figures to analysis/figures/ and returns a results struct.
 res = analyzeCorpus(C);
