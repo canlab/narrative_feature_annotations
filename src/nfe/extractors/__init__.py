@@ -15,6 +15,7 @@ from .audio_lowlevel import AudioLowLevel
 from .event_segmentation import EventSegmentation
 from .face_emotion import FaceEmotion
 from .faces import Faces
+from .language_hl import LanguageHL
 from .language_lexical import LanguageLexical
 from .language_surprisal import LanguageSurprisal
 from .language_syntax import LanguageSyntax
@@ -51,7 +52,7 @@ def vision_mps_extractors():
 def audio_hl_mps_extractors():
     """GPU/MPS audio + transcript-affect/surprisal passes. Opt in via `audio_hl`."""
     return [AudioEvents(), AudioClap(), VocalAffect(), TextEmotion(), TextSentiment(),
-            LanguageSurprisal()]
+            LanguageSurprisal(), LanguageHL()]
 
 
 def reasoning_extractors():

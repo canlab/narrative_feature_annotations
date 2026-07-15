@@ -52,7 +52,8 @@ for i = 1:numel(chans)
     leaf = parts(end);
     dt   = string(c.dtype);
     isNum = ismember(dt, ["scalar", "bool", "event", "vector"]);
-    isEmb = ismember(leaf, ["siglip_embedding", "dino_embedding", "clap_embedding"]);
+    isEmb = ismember(leaf, ["siglip_embedding", "dino_embedding", "clap_embedding", ...
+                            "qwen3", "llama_ar"]);
     lev   = localLevel(cls, sub, leaf);
     mdl   = ""; if isfield(c, "model") && ~isempty(c.model), mdl = string(c.model); end
 

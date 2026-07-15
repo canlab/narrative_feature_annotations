@@ -1,5 +1,5 @@
 {
- "n_channels": 95,
+ "n_channels": 103,
  "channels": [
   {
    "path": "affect/depicted/emonet",
@@ -2047,6 +2047,78 @@
    "dtype": "scalar",
    "units": "words/s",
    "model": "faster-whisper-small",
+   "dim": null,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/embedding/llama_ar",
+   "dtype": "vector",
+   "units": "",
+   "model": "NousResearch/Meta-Llama-3.1-8B-Instruct",
+   "dim": 4096,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/embedding/qwen3",
+   "dtype": "vector",
+   "units": "",
+   "model": "Qwen/Qwen3-Embedding-0.6B",
+   "dim": 1024,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/hl/narrative_expectedness",
+   "dtype": "scalar",
+   "units": "",
+   "model": "NousResearch/Meta-Llama-3.1-8B-Instruct",
+   "dim": null,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/hl/narrative_surprise",
+   "dtype": "scalar",
+   "units": "",
+   "model": "NousResearch/Meta-Llama-3.1-8B-Instruct",
+   "dim": null,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/hl/semantic_coherence",
+   "dtype": "scalar",
+   "units": "",
+   "model": "Qwen/Qwen3-Embedding-0.6B",
+   "dim": null,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/hl/semantic_drift",
+   "dtype": "scalar",
+   "units": "",
+   "model": "Qwen/Qwen3-Embedding-0.6B",
+   "dim": null,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/hl/semantic_novelty",
+   "dtype": "scalar",
+   "units": "",
+   "model": "Qwen/Qwen3-Embedding-0.6B",
+   "dim": null,
+   "components": null,
+   "categories": null
+  },
+  {
+   "path": "language/hl/semantic_surprise",
+   "dtype": "scalar",
+   "units": "",
+   "model": "Qwen/Qwen3-Embedding-0.6B",
    "dim": null,
    "components": null,
    "categories": null
