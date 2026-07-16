@@ -162,6 +162,20 @@ copies live in `PDFs/` (Dropbox-only).
   noun/verb fraction, parse-tree depth, and mean dependency distance — proxies for
   syntactic complexity and processing load.
 
+- **LLM language embeddings (5120)** — a dense, contextual representation of *what is said*,
+  mirroring SigLIP/CLAP for the other modalities. [Qwen3-Embedding](https://github.com/QwenLM/Qwen3-Embedding)
+  (Alibaba, 2025) gives a 1024-d sentence embedding per utterance, and
+  [Llama-3.1-8B](https://arxiv.org/abs/2407.21783) supplies 4096-d autoregressive hidden
+  states — the standard feature for fMRI/MEG language-encoding models. Aligned to whisper
+  word timings and resampled to 1 Hz.
+
+- **Semantic & narrative surprise (6)** — interpretable scalars derived from the embeddings
+  at rising levels: **semantic coherence / drift / novelty / surprise** (how the meaning of
+  each line relates to what came before, from the Qwen3 embeddings) and **narrative
+  expectedness / surprise** (how predictable each line is given the story so far, rated by
+  Llama-3.1-8B-Instruct). Together with GPT-2 word surprisal and spaCy syntax, these span
+  lexical → semantic → discourse/narrative prediction error.
+
 ### Social — who is present and how they relate
 
 - **Social relations (4)** — derived from the video by the [Qwen2.5-VL](https://arxiv.org/abs/2502.13923)

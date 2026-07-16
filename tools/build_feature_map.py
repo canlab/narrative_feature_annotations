@@ -36,6 +36,7 @@ SUBLABEL = {  # prettier subclass names
     "saliency_aesthetics_depth": "saliency / depth", "action": "action",
     "low_level": "low-level acoustics", "high_level": "audio events / scenes",
     "speech": "speech", "lexical": "lexical", "syntax": "syntax",
+    "embedding": "LLM embeddings", "hl": "semantic / narrative",
     "depicted": "depicted affect", "(direct)": "",
 }
 
@@ -127,6 +128,14 @@ LABELS = {
     "language/syntax/verb_frac": "verb fraction",
     "language/syntax/tree_depth": "parse-tree depth",
     "language/syntax/mean_dep_distance": "dependency distance",
+    "language/embedding/qwen3": "Qwen3 sentence embedding",
+    "language/embedding/llama_ar": "Llama-3.1 AR embedding",
+    "language/hl/semantic_coherence": "semantic coherence",
+    "language/hl/semantic_drift": "semantic drift",
+    "language/hl/semantic_novelty": "semantic novelty",
+    "language/hl/semantic_surprise": "semantic surprise",
+    "language/hl/narrative_expectedness": "narrative expectedness",
+    "language/hl/narrative_surprise": "narrative surprise",
     # situation
     "situation/event_boundary": "event boundary",
     "situation/event_id": "event number",

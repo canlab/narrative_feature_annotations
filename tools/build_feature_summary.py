@@ -90,6 +90,13 @@ STRUCTURE = OrderedDict([
         "High-level": [
             ("word surprisal & next-word entropy",
                 ["language/lexical/surprisal", "language/lexical/entropy"]),
+            ("LLM embeddings — Qwen3 sentence + Llama-3.1 autoregressive",
+                ["language/embedding/qwen3", "language/embedding/llama_ar"]),
+            ("semantic coherence / drift / novelty / surprise",
+                ["language/hl/" + s for s in
+                 ["semantic_coherence", "semantic_drift", "semantic_novelty", "semantic_surprise"]]),
+            ("narrative expectedness / surprise (LLM-rated)",
+                ["language/hl/narrative_expectedness", "language/hl/narrative_surprise"]),
         ],
     }),
     ("Social", {
