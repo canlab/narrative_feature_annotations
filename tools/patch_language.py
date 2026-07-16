@@ -46,9 +46,12 @@ NEW_PATHS = [
 
 
 def already_patched(h5: Path) -> bool:
-    # require ALL new channels present (a partial/failed patch must be redone)
+    # require ALL new channels present AND the embedding to be a real pass (applicable=1),
+    # not a NaN skeleton left by a base run that predates this extractor.
     with h5py.File(h5, "r") as f:
-        return all(("features/" + p) in f for p in NEW_PATHS)
+        if not all(("features/" + p) in f for p in NEW_PATHS):
+            return False
+        return int(f[PROBE].attrs.get("applicable", 0)) == 1
 
 
 def patch_h5(h5: Path, channels) -> None:
