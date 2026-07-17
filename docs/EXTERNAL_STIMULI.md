@@ -119,7 +119,7 @@ tools/refresh_corpus.sh                                  # annotates the new sti
 matlab -batch "addpath matlab; refreshAnalysis('annotations/corpus')"
 ```
 
-The new stimuli are annotated on the same 95-channel constant-shape template and folded into
+The new stimuli are annotated on the same 103-channel constant-shape template and folded into
 all analyses and the search interface automatically. If you also have the HCP clip-timing CSV,
 tell me and I can align annotations to the per-clip boundaries.
 

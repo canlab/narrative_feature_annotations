@@ -15,8 +15,8 @@ For a hands-on tour run [`docs/walkthrough.m`](walkthrough.m) in MATLAB.
 | Phase | What | State |
 |-------|------|-------|
 | 1 Scoping review | best-in-class tools per feature class | ✅ `docs/scoping_review/` |
-| 2 Pipeline | 23 extractors → constant-shape annotations + MATLAB reader | ✅ `src/nfe/`, `matlab/` |
-| 3 Corpus | manifest + batch runner; **83 stimuli annotated** (53 audiovisual + 29 audio stories + 1 text) | ✅ `annotations/corpus/` |
+| 2 Pipeline | 24 extractors → constant-shape annotations + MATLAB reader | ✅ `src/nfe/`, `matlab/` |
+| 3 Corpus | manifest + batch runner; **105 stimuli annotated** (75 audiovisual + 29 audio stories + 1 text) | ✅ `annotations/corpus/` |
 | 4 Analysis | corpus reader, viewer, correlation/PCA/network, design tool, web search, draft paper | ✅ `matlab/`, `analysis/web/`, [`REVIEW_PAPER.md`](REVIEW_PAPER.md) |
 
 ---
@@ -27,7 +27,7 @@ For a hands-on tour run [`docs/walkthrough.m`](walkthrough.m) in MATLAB.
 README.md                  project overview + quickstart
 requirements.txt           Python deps (pipeline)
 data/
-  manifest.csv / .json     stimulus catalog (83 stimuli) — tools/build_manifest.py
+  manifest.csv / .json     stimulus catalog (105 stimuli) — tools/build_manifest.py
   movies/spacetop/         lab fMRI stimulus clips (49)        [internal]
   movies/open/             CC-BY Blender films (3) + SOURCES.md
   lexicons/                optional psycholinguistic norm CSVs (README.md)
@@ -35,7 +35,7 @@ data/
   stories/samples/         pure-text sample story (.txt)
   movies/hcp/, movies/camcan/  placeholders for credentialed stimuli (see EXTERNAL_STIMULI.md)
 schema/
-  channel_template.json    the 95-channel constant-shape template
+  channel_template.json    the 103-channel constant-shape template
   annotation_schema.json   v0.1 pure-JSON profile schema
   example_annotation.json  tiny worked example
 src/nfe/                   the Python annotation pipeline (see "Tools")
@@ -58,15 +58,15 @@ tools/                     helper scripts (manifest, template, review assembly)
 
 ## Datasets
 
-- **Corpus manifest: 83 stimuli** (`data/manifest.csv`) — 49 `spacetop` audiovisual clips + 4 short
+- **Corpus manifest: 105 stimuli** (`data/manifest.csv`) — 49 `spacetop` audiovisual clips + 4 short
   films (3 CC-BY Blender open films + *Kung Fury*) + **29 Narratives spoken-story audio clips**
   (`data/stories/narratives/`, ~5.3 h; OpenNeuro ds002345, Nastase et al.) + 1 pure-text sample
-  story. 53 audiovisual, 29 audio-only, 1 text-only. Add media under `data/movies/<source>/`
+  story. 75 audiovisual, 29 audio-only, 1 text-only. Add media under `data/movies/<source>/`
   (movies/audio) or `data/stories/<source>/` (audio/text stories) and re-run
   `tools/build_manifest.py`. See [`ADDING_MOVIES.md`](ADDING_MOVIES.md); credentialed sets (HCP,
-  CamCAN) in [`EXTERNAL_STIMULI.md`](EXTERNAL_STIMULI.md). All 83 are annotated; corpus-wide
+  CamCAN) in [`EXTERNAL_STIMULI.md`](EXTERNAL_STIMULI.md). All 105 are annotated; corpus-wide
   analysis focuses on the audio/language channels shared across modalities, with visual/social/
-  affective structure on the 53-stimulus audiovisual subset (see [`REVIEW_PAPER.md`](REVIEW_PAPER.md) §5–6).
+  affective structure on the 75-stimulus audiovisual subset (see [`REVIEW_PAPER.md`](REVIEW_PAPER.md) §5–6).
 - **Lexicons (optional):** drop `data/lexicons/<field>.csv` (valence, arousal,
   dominance, concreteness, aoa) to light up those per-word channels; absent → NaN.
 
@@ -88,14 +88,14 @@ One annotation per stimulus at `annotations/corpus/<id>/`:
   ```
 - **`<id>.manifest.json`** — readable sidecar: same hierarchy + metadata, no bulk arrays.
 
-**Constant shape.** Every file has the **same 95 channels** (the template). Channels
+**Constant shape.** Every file has the **same 103 channels** (the template). Channels
 not produced for a stimulus (a class that doesn't apply to the modality, or a pass not
 run) are present with `applicable=false` and all-`NaN`, so the corpus stacks into
 rectangular matrices. Full spec: [`design/ANNOTATION_FORMAT.md`](design/ANNOTATION_FORMAT.md).
 
-The 95 channels span: **visual** (37 — low-level, semantic SigLIP2/DINOv2, motion,
+The 103 channels span: **visual** (37 — low-level, semantic SigLIP2/DINOv2, motion,
 depth, action, faces, pose, saliency), **audio** (21 — low-level, AudioSet/CLAP,
-speech), **language** (14 — lexical, syntax, surprisal), **affect** (14 — text emotion/
+speech), **language** (22 — lexical, syntax, surprisal), **affect** (14 — text emotion/
 sentiment, vocal, EmoNet image emotion, facial affect, VLM depicted), **situation**
 (5 — incl. GSBS event boundaries), **social** (4). What each pass computes:
 [`design/PHASE2_STATUS.md`](design/PHASE2_STATUS.md).

@@ -56,7 +56,7 @@ matlab -batch "addpath matlab; refreshAnalysis('annotations/corpus')"
 ### Notes
 - **Resumable:** existing annotations are skipped; only new stimuli are processed. Long
   films take a while (especially `--reason`); run overnight if needed.
-- **Template is stable:** adding media does **not** change the 95-channel template. Only
+- **Template is stable:** adding media does **not** change the 103-channel template. Only
   rebuild it (`tools/build_channel_template.py`) if you change the *extractor set* — then
   re-annotate everything with `--no-skip`.
 - Hardware/runtime guidance: `docs/design/PHASE3_CORPUS.md`, `design/DEPLOYMENT_FEASIBILITY.md`.
@@ -93,7 +93,7 @@ When asked to refresh after media was added:
 4. **Surface results** — `SendUserFile` the regenerated `analysis/figures/*.png` if useful.
 5. **Memory** — update the project memory with the new corpus size and date.
 6. **Sanity checks** — `corpus_index.csv` has 0 errors; `readAnnotationCorpus` loads the
-   expected N; the constant 95-channel shape still holds across all files; if a new
+   expected N; the constant 103-channel shape still holds across all files; if a new
    `SOURCES.md`/rights are needed for the added source, create it.
 
 ### Edge cases

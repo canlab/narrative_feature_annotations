@@ -63,7 +63,7 @@ template (`schema/channel_template.json`, built by `tools/build_channel_template
 from a real full run — no hand-maintained spec lists). Run with `--template
 schema/channel_template.json`: channels not produced (class inapplicable to the
 modality, or pass disabled) are filled as `applicable=false`, all-`NaN` skeletons with
-the right dtype/dim/components. Verified: a CPU-only run + template = the same 95-channel
+the right dtype/dim/components. Verified: a CPU-only run + template = the same 103-channel
 hierarchy as the full stack (e.g. kungfury: 78 measured + 8 skeleton; a CPU-only run has
 correspondingly more skeleton channels). This unblocks Phase 3/4 stacking.
 

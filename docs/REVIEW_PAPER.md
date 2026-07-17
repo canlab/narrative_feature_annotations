@@ -71,7 +71,7 @@ review and the on-disk format.
 
 ## 3. Models and algorithms
 
-The pipeline implements 23 extractors. For each we name the model actually deployed and,
+The pipeline implements 24 extractors. For each we name the model actually deployed and,
 where a lighter local stand-in was used, the best-in-class model it substitutes for
 (production targets). Local-first deployment runs on a single Apple-Silicon GPU (Metal/
 MPS) or CPU; a small number of high-level reasoning features can optionally be routed to
@@ -173,15 +173,15 @@ into structs and timetables.
 
 ## 5. Corpus
 
-The analyzed corpus comprises **83 stimuli totaling ~470.6 minutes (~7.8 hours)** across
+The analyzed corpus comprises **105 stimuli totaling ~588.9 minutes (~7.8 hours)** across
 three modalities: 49 short **audiovisual** clips from a naturalistic-fMRI stimulus set, 4
 short films (3 Creative-Commons Blender open films — Big Buck Bunny, Sintel, Tears of Steel —
 and *Kung Fury*), **29 spoken-story audio** stimuli (~5.3 h) from the openly-released
 *Narratives* collection (Nastase et al., 2021; OpenNeuro ds002345), and 1 pure-text sample
-story — i.e. **53 audiovisual, 29 audio-only, and 1 text-only** stimuli. Every stimulus was
-annotated under the same constant 95-channel template; classes that do not apply to a modality
+story — i.e. **75 audiovisual, 29 audio-only, and 1 text-only** stimuli. Every stimulus was
+annotated under the same constant 103-channel template; classes that do not apply to a modality
 (e.g. visual features for an audio story) are present as `applicable=false` null skeletons.
-Stacked, the corpus yields **28,237 one-second timepoints**, demonstrating that stimuli of very
+Stacked, the corpus yields **35,331 one-second timepoints**, demonstrating that stimuli of very
 different modalities share one common analysis format.
 
 Because the corpus is modality-mixed and now dominated (in timepoints) by audio stories, the
@@ -189,7 +189,7 @@ channels populated *across all stimuli* are the audio, speech, and language feat
 visual/social/situational channels are — correctly — undefined for the audio and text stimuli.
 Corpus-wide analysis of the shared scalar channels therefore reflects this audio/language core
 (**26 channels** survive a ≤40%-missing filter), while modality-specific structure is analyzed
-on the **53-stimulus audiovisual subset** (below; 51 channels). Adding the spoken stories also
+on the **75-stimulus audiovisual subset** (below; 51 channels). Adding the spoken stories also
 transformed the corpus from dialogue-light to language-rich: word-level surprisal is defined in
 **91%** of story timepoints, versus sparse coverage in the audiovisual clips.
 
@@ -224,7 +224,7 @@ blocks are expected and motivate keeping a *parsimonious* core set plus compleme
 
 The annotation set is **highly multidimensional**. Across the full 83-stimulus corpus, the 26
 audio/language channels shared by all modalities require **12 principal components to reach 80%**
-of the variance (PC1–5 ≈ 50%). On the 53-stimulus **audiovisual subset** (**Fig. 2**),
+of the variance (PC1–5 ≈ 50%). On the 75-stimulus **audiovisual subset** (**Fig. 2**),
 which adds the visual/social/situational/affective channels, 51 channels require **18 PCs to reach 80%**.
 Either way, naturalistic feature space has many semi-independent axes to sample — encouraging for
 stimulus design.

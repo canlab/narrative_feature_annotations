@@ -1,6 +1,6 @@
 # Feature map
 
-A visual map of **all 95 annotation channels and their hierarchical organization** — the
+A visual map of **all 103 annotation channels and their hierarchical organization** — the
 six feature classes, each grouped by subclass, with one chip per channel.
 
 ![Narrative Feature Annotation Map](../analysis/figures/feature_map.svg)
@@ -32,7 +32,7 @@ is the standard perception hierarchy: **low-level** = raw physical/perceptual si
 |---|---|---|---|
 | **Visual** | image statistics (12); optical-flow motion (3); shot cuts (2) | saliency & depth (8); faces & bodies (7) | SigLIP semantics — embedding + scene probes (784); DINOv2 embedding (384); action recognition (400) |
 | **Audio** | acoustics — loudness / pitch / timbre / MFCC / chroma (34) | speech presence & rate (2) | AudioSet sound tags (527); CLAP semantics — embedding + probes (524); vocal affect V/A/D (3) |
-| **Language** | word frequency & length (2) | lexical norms — valence / arousal / dominance, concreteness, AoA (5); syntactic complexity (5) | word surprisal & next-word entropy (2) |
+| **Language** | word frequency & length (2) | lexical norms — valence / arousal / dominance, concreteness, AoA (5); syntactic complexity (5) | word surprisal & entropy (2); LLM embeddings — Qwen3 (1024) + Llama-3.1 AR (4096); semantic coherence/drift/novelty/surprise (4); narrative expectedness/surprise (2) |
 | **Social** | — | agent count & closest-pair distance (2) | interaction type & social dominance (2) |
 | **Situation** | — | — | scene description / setting / indoor–outdoor (3); event structure — boundaries & event id (2) |
 | **Affect** | — | facial affect — 8 expressions + valence + arousal (10) | EmoNet image emotion (20); text emotion & sentiment (32); VLM depicted emotion (3) |

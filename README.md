@@ -7,7 +7,7 @@ paper with figures, and the interactive segment browser — is published as a bo
 **[canlab.github.io/narrative_feature_annotations](https://canlab.github.io/narrative_feature_annotations/)**.
 It is the recommended entry point. (Build/deploy notes: [`docs/DEPLOYING.md`](docs/DEPLOYING.md).)*
 
-### 🗺️ [**Feature map**](docs/FEATURE_MAP.md) — all 95 annotation channels at a glance
+### 🗺️ [**Feature map**](docs/FEATURE_MAP.md) — all 103 annotation channels at a glance
 
 [![Narrative Feature Annotation Map](analysis/figures/feature_map.svg)](docs/FEATURE_MAP.md)
 
@@ -26,8 +26,8 @@ A human supplies a movie or story; the pipeline returns a hierarchical, semantic
 | Phase | Goal | Status |
 |-------|------|--------|
 | **1. Scoping review** | Survey computational annotation tools across all feature classes; organize in a semantic hierarchy; recommend best-in-class vs redundant features. | ✅ Draft complete — see [`docs/scoping_review/`](docs/scoping_review/README.md) |
-| **2. Pipeline build** | Select final feature/model set (with human input); deploy models locally or via API; produce hierarchical second-by-second annotations + MATLAB reader. | ✅ 23 extractors across all classes; constant-shape output; see [`docs/design/PHASE2_STATUS.md`](docs/design/PHASE2_STATUS.md) |
-| **3. Corpus annotation** | Assemble movies/stories (user-supplied + sourced); run annotations across the whole corpus. | ✅ manifest + resumable batch runner; **83 stimuli annotated** (movies, films, 29 spoken stories, a text story). [`docs/design/PHASE3_CORPUS.md`](docs/design/PHASE3_CORPUS.md) |
+| **2. Pipeline build** | Select final feature/model set (with human input); deploy models locally or via API; produce hierarchical second-by-second annotations + MATLAB reader. | ✅ 24 extractors across all classes; constant-shape output; see [`docs/design/PHASE2_STATUS.md`](docs/design/PHASE2_STATUS.md) |
+| **3. Corpus annotation** | Assemble movies/stories (user-supplied + sourced); run annotations across the whole corpus. | ✅ manifest + resumable batch runner; **105 stimuli annotated** (movies, films, 29 spoken stories, a text story). [`docs/design/PHASE3_CORPUS.md`](docs/design/PHASE3_CORPUS.md) |
 | **4. Analysis & dissemination** | MATLAB analysis across corpus; review paper; interactive web search interface; experimental-design / stimulus-selection tool. | ✅ corpus reader, synced viewer, correlation/PCA/network, design tool, web search, [draft review paper](docs/REVIEW_PAPER.md). [`docs/design/PHASE4_ANALYSIS.md`](docs/design/PHASE4_ANALYSIS.md) |
 
 ## Repository layout
