@@ -30,52 +30,8 @@ arguments
     opts.NaNInapplicable (1,1) logical = true
 end
 
-if isempty(info), info = featureInfo(); end
-keep = info.Numeric;
-if ~opts.IncludeEmbeddings, keep = keep & ~info.IsEmbedding; end
-info = info(keep, :);
-
-n = numel(ann.time_sec);
-V = height(info);
-X = nan(n, V);
-
-% Group rows by channel path so each channel dataset is fetched once.
-[paths, ~, gidx] = unique(info.Path, "stable");
-for gp = 1:numel(paths)
-    rows = find(gidx == gp);                 % info rows (columns of X) for this channel
-    ch = localGet(ann, paths(gp));
-    if isempty(ch) || ~isfield(ch, "value") || ~isnumeric(ch.value), continue; end
-    v = double(ch.value);
-    applicable = ~isfield(ch, "applicable") || ch.applicable;
-    if opts.NaNInapplicable && ~applicable, continue; end     % leave as NaN
-    if isvector(v)                           % scalar channel [n x 1]
-        if numel(v) == n, X(:, rows(1)) = v(:); end
-    else                                     % vector channel [n x D]
-        if size(v,1) == n
-            ci = info.CompIndex(rows);        % component index per target column
-            ok = ci <= size(v,2);
-            X(:, rows(ok)) = v(:, ci(ok));
-        end
-    end
-end
-
+[X, info] = featuresToMatrix(ann, info, "IncludeEmbeddings", opts.IncludeEmbeddings, ...
+                             "NaNInapplicable", opts.NaNInapplicable);
 rowTimes = seconds(ann.time_sec(:));
 T = array2timetable(X, "RowTimes", rowTimes, "VariableNames", cellstr(info.VarName));
-end
-
-% -------------------------------------------------------------------------
-function ch = localGet(ann, path)
-% Walk ann.features by "a/b/c" path; return the channel struct or [].
-ch = [];
-node = ann.features;
-parts = split(string(path), "/");
-for i = 1:numel(parts)
-    f = char(parts(i));
-    if isstruct(node) && isfield(node, f)
-        node = node.(f);
-    else
-        return
-    end
-end
-if isstruct(node) && isfield(node, "value"), ch = node; end
 end

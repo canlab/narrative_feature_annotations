@@ -100,10 +100,10 @@ for i = 1:numel(cats)
     d = size(Z,2);
     if d == 0, continue; end
 
-    % pairwise correlation -> nearest PD; drop fully-collinear columns
-    R = corr(Z, "rows","pairwise"); R(~isfinite(R)) = 0; R(1:d+1:end) = 1;
+    % correlation (PSD when from complete rows) -> drop collinear -> repair only if needed
+    [R, isPD] = localFastCorr(Z); R(1:d+1:end) = 1;
     [R, vinfo, Z] = localDropCollinear(R, vinfo, Z);
-    R = localNearestPD(R);
+    if ~isPD, R = localNearestPD(R); end            % full-eig repair only for pairwise corr
     d = size(R,1);
     nEff = size(Z,1);
 
@@ -111,7 +111,11 @@ for i = 1:numel(cats)
     method = opts.Method;
     if method == "auto"
         method = "factoran";
-        if d < 3 || m > localMaxFactoranM(d), method = "pca"; end
+        % Use PCA for tiny blocks, when FACTORAN's dof rule is violated, OR for large
+        % blocks: FACTORAN's ML fit is impractically slow past a few hundred variables
+        % (the 4096-d Llama / 1024-d Qwen embeddings would never finish), and PCA is the
+        % appropriate reduction for opaque embeddings / big taxonomies anyway.
+        if d < 3 || m > localMaxFactoranM(d) || d > 120, method = "pca"; end
     end
 
     Zi = Z; Zi(isnan(Zi)) = 0;                      % standardized mean-imputation
@@ -182,6 +186,23 @@ end
 R = R(keep,keep); info = info(keep,:); Z = Z(:,keep);
 end
 
+function [R, isPD] = localFastCorr(Z)
+% Correlation robust to missing data but fast on high-dimensional embeddings.
+% Embeddings/vectors have ROW-CONSISTENT NaN (a whole timepoint is present or absent),
+% so dropping all-incomplete rows keeps every real observation and lets us use the
+% fast matrix-based corr (which is positive semidefinite) instead of the O(p^2 n)
+% pairwise one (which made the 4096-d Llama block take tens of minutes and can be
+% indefinite). isPD flags the complete-row path (no nearest-PD repair needed).
+d = size(Z, 2);
+cr = all(~isnan(Z), 2);
+if sum(cr) >= max(3 * d, 100)
+    R = corr(Z(cr, :)); isPD = true;
+else
+    R = corr(Z, "rows", "pairwise"); isPD = false;
+end
+R(~isfinite(R)) = 0;
+end
+
 function A = localNearestPD(A)
 A = (A + A')/2; [V,D] = eig(A); d = diag(D); d(d < 1e-6) = 1e-6;
 A = V*diag(d)*V'; A = (A + A')/2; s = sqrt(diag(A)); A = A ./ (s*s');
@@ -189,9 +210,20 @@ A = (A + A')/2; A(1:size(A,1)+1:end) = 1;
 end
 
 function [V, ev] = localTopEig(R, m)
-[V,D] = eig((R+R')/2); ev = diag(D);
+% Top-m eigenpairs. Use iterative eigs (O(p^2 m)) instead of full eig (O(p^3)) — the
+% difference is minutes vs seconds on the 4096-d embedding blocks. Fall back to eig if
+% eigs fails to converge (small/ill-conditioned blocks).
+R = (R + R')/2;
+m = max(1, min(m, size(R,1) - 1));
+try
+    [V, D] = eigs(R, m, "largestreal");
+    ev = diag(D);
+catch
+    [V, D] = eig(R); ev = diag(D);
+    [ev, ix] = sort(ev, "descend"); V = V(:, ix(1:m)); ev = ev(1:m);
+    return
+end
 [ev, ix] = sort(ev, "descend"); V = V(:, ix);
-m = min(m, size(V,2)); V = V(:,1:m); ev = ev(1:m);
 end
 
 function mmax = localMaxFactoranM(d)

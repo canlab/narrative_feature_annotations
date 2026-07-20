@@ -32,6 +32,7 @@ arguments
     opts.Pattern (1,1) string = "*/*.h5"
     opts.IncludeEmbeddings (1,1) logical = true
     opts.DropAllNaN (1,1) logical = true
+    opts.BuildTable (1,1) logical = false     % also build C.T (a wide table); slow for many vars
     opts.Verbose (1,1) logical = true
 end
 
@@ -46,18 +47,22 @@ for i = 1:numel(files)
     f = string(fullfile(files(i).folder, files(i).name));
     try
         ann = readAnnotations(f);
-        T = featuresToTable(ann, info, "IncludeEmbeddings", opts.IncludeEmbeddings);
+        % Build the numeric matrix directly (NOT a per-clip wide table — table ops
+        % scale terribly with column count and would take orders of magnitude longer
+        % on the ~7.9k-variable set).
+        Xi = featuresToMatrix(ann, info, "IncludeEmbeddings", opts.IncludeEmbeddings);
     catch ME
         warning("readAnnotationCorpusFull:skip", "Skipping %s (%s).", files(i).name, ME.message);
         continue
     end
     id = string(ann.stimulus.id);
+    ni = size(Xi, 1);
     ids(end+1) = id; %#ok<AGROW>
-    nT(end+1) = height(T); %#ok<AGROW>
-    Xcell{end+1} = T{:,:}; %#ok<AGROW>
-    stimCell{end+1} = repmat(id, height(T), 1); %#ok<AGROW>
-    timeCell{end+1} = seconds(T.Time); %#ok<AGROW>
-    if opts.Verbose, fprintf("  [%2d/%2d] %-42s %5d x %d\n", i, numel(files), id, height(T), width(T)); end
+    nT(end+1) = ni; %#ok<AGROW>
+    Xcell{end+1} = Xi; %#ok<AGROW>
+    stimCell{end+1} = repmat(id, ni, 1); %#ok<AGROW>
+    timeCell{end+1} = ann.time_sec(:); %#ok<AGROW>
+    if opts.Verbose, fprintf("  [%2d/%2d] %-42s %5d x %d\n", i, numel(files), id, ni, size(Xi,2)); end
 end
 if isempty(ids), error("readAnnotationCorpusFull:none", "No readable files under %s.", folder); end
 
@@ -83,8 +88,12 @@ C.stim = stim;
 C.time_sec = time_sec;
 C.ids = ids;
 C.nT = nT;
-C.T = [table(stim, time_sec, 'VariableNames', {'Stim','TimeSec'}), ...
-       array2table(X, 'VariableNames', cellstr(keepInfo.VarName))];
+% The wide table (Stim + TimeSec + one column per variable) is convenient but
+% array2table with thousands of variables is very slow, so it is opt-in.
+if opts.BuildTable
+    C.T = [table(stim, time_sec, 'VariableNames', {'Stim','TimeSec'}), ...
+           array2table(X, 'VariableNames', cellstr(keepInfo.VarName))];
+end
 
 if opts.Verbose
     fprintf("Corpus: %d clips, %d timepoints, %d variables (%d embedding, %d interpretable).\n", ...

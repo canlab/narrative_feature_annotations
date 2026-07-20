@@ -59,9 +59,10 @@ FIGURES = [
     ("08_umap_annotations",
      "Figure 4. UMAP embedding of all {n_vars:,} individual feature-variable annotations (not the "
      "factors), each point one variable colored by feature domain (legend). The variables separate "
-     "cleanly into a large auditory mass and a large visual mass, with the smaller language, "
-     "social, situational, and affective feature sets bridging them — showing that the annotation "
-     "space is organized primarily by sensory modality."),
+     "cleanly into three modality masses — visual, auditory, and language (now the largest, "
+     "dominated by the Qwen3 and Llama-3.1 language embeddings) — with the smaller social, "
+     "situational, and affective feature sets between them, showing that the annotation space is "
+     "organized primarily by modality."),
 ]
 
 
@@ -150,7 +151,9 @@ def reducibility_phrases(f):
               "clap_embedding": "the CLAP audio embedding",
               "chroma": "musical pitch-class (chroma)",
               "text_sentiment": "text sentiment",
-              "mfcc": "MFCC timbre"}
+              "mfcc": "MFCC timbre",
+              "qwen3": "the Qwen3 language embedding",
+              "llama_ar": "the Llama-3.1 language embedding"}
     low = [c for c in cats if c["pc1_pct"] <= 7][:5]
     high = [c for c in reversed(cats) if c["pc1_pct"] >= 50][:2]
     low_txt = "; ".join(f"{pretty.get(c['category'], c['category'])} ({c['pc1_pct']:.0f}%)" for c in low)
@@ -162,7 +165,7 @@ def main():
     f = facts()
     n_seconds = int(round(f["total_minutes"] * 60))
     hours = f["total_minutes"] / 60
-    n_factors = 154
+    n_factors = 176
     if f.get("reducibility"):
         n_seconds = f["reducibility"].get("n_timepoints", n_seconds)
     low_txt, high_txt = reducibility_phrases(f)
